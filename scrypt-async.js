@@ -66,7 +66,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
           u = w[i-15];
           t2 = ((u>>>7) | (u<<(32-7))) ^ ((u>>>18) | (u<<(32-18))) ^ (u>>>3);
 
-          w[i] = (((t1 + w[i-7]) | 0) + ((t2 + w[i-16]) | 0) | 0);
+          w[i] = (((t1 + w[i-7]) | 0) + ((t2 + w[i-16]) | 0)) | 0;
         }
 
         for (i = 0; i < 64; i++) {
