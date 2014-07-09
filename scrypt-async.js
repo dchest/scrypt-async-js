@@ -103,7 +103,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
     blocks(m);
 
-    var i, bytesLeft = m.length & 63,
+    var i, bytesLeft = m.length % 64,
         bitLenHi = (m.length / 0x20000000) | 0,
         bitLenLo = m.length << 3,
         numZeros = (bytesLeft < 56) ? 56 : 120,
