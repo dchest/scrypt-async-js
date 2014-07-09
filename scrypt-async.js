@@ -104,16 +104,21 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     blocks(m);
 
     var i, bytesLeft = m.length & 63,
-        bitLen = m.length * 8,
-        numZeros = (bytesLeft < 56) ? 60 : 124,
+        bitLenHi = (m.length / 0x20000000) | 0,
+        bitLenLo = m.length << 3,
+        numZeros = (bytesLeft < 56) ? 56 : 120,
         p = m.slice(m.length - bytesLeft, m.length);
 
     p.push(0x80);
     for (i = bytesLeft + 1; i < numZeros; i++) p.push(0);
-    p.push((bitLen>>>24) & 0xff);
-    p.push((bitLen>>>16) & 0xff);
-    p.push((bitLen>>>8)  & 0xff);
-    p.push((bitLen>>>0)  & 0xff);
+    p.push((bitLenHi>>>24) & 0xff);
+    p.push((bitLenHi>>>16) & 0xff);
+    p.push((bitLenHi>>>8)  & 0xff);
+    p.push((bitLenHi>>>0)  & 0xff);
+    p.push((bitLenLo>>>24) & 0xff);
+    p.push((bitLenLo>>>16) & 0xff);
+    p.push((bitLenLo>>>8)  & 0xff);
+    p.push((bitLenLo>>>0)  & 0xff);
 
     blocks(p);
 
