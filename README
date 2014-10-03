@@ -1,7 +1,5 @@
 SCRYPT-ASYNC-JS
 
-*** ALPHA VERSION *** DO NOT USE YET FOR ANYTHING SERIOUS ***
-
 Fast "async" scrypt implementation in JavaScript.
 
 Works in browsers without throwing out "kill slow script" warnings due to
