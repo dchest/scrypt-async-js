@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "0.10"
+  - "0.12.2"
+  - iojs
+env:
+  - NACL_SRC=nacl.min.js
+  - NACL_SRC=nacl-fast.min.js
+script: "npm test"

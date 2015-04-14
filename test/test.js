@@ -6,7 +6,7 @@
 /*
  * Test.
  */
-var scrypt = (typeof require !== 'undefined') ? require('./scrypt-async.js') : window.scrypt;
+var scrypt = (typeof require !== 'undefined') ? require('../scrypt-async.js') : window.scrypt;
 
 if (!scrypt) throw new Error('scrypt not loaded');
 
