@@ -1,6 +1,6 @@
 {
   "name": "scrypt-async",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fast \"async\" scrypt implementation in JavaScript.",
   "main": "scrypt-async.js",
   "scripts": {
@@ -14,7 +14,8 @@
   "keywords": [
     "crypto",
     "cryptography",
-    "scrypt"
+    "scrypt",
+    "password"
   ],
   "author": "Dmitry Chestnykh",
   "license": "BSD",

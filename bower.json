@@ -1,0 +1,27 @@
+{
+  "name": "scrypt-async",
+  "version": "1.0.1",
+  "homepage": "https://github.com/dchest/scrypt-async-js",
+  "authors": [
+    "Dmitry Chestnykh <dmitry@codingrobots.com>"
+  ],
+  "description": "Fast \"async\" scrypt implementation in JavaScript",
+  "main": "scrypt-async.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "crypto",
+    "cryptography",
+    "scrypt",
+    "password"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test*",
+    "demo.html"
+  ]
+}
