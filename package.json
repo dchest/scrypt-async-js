@@ -4,7 +4,8 @@
   "description": "Fast \"async\" scrypt implementation in JavaScript.",
   "main": "scrypt-async.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js",
+    "build": "uglifyjs scrypt-async.js --comments '/^!/' -c -m -o scrypt-async.min.js"
   },
   "repository": {
     "type": "git",
