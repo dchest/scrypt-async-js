@@ -1,16 +1,7 @@
-/*!
- * Fast "async" scrypt implementation in JavaScript.
- * Copyright (c) 2013-2014 Dmitry Chestnykh | BSD License
- * https://github.com/dchest/scrypt-async-js
- */
-/*
- * Test.
- */
-var scrypt = (typeof require !== 'undefined') ? require('../scrypt-async.js') : window.scrypt;
+var scrypt = require('../scrypt-async.js');
+var assert = require("assert");
 
-if (!scrypt) throw new Error('scrypt not loaded');
-
-var good = [
+var inputs = [
   {
     password: 'this is a long \x00 password',
     salt: 'and this is a long \x00 salt',
@@ -41,25 +32,31 @@ var good = [
   }
 ]
 
-var startTime = new Date();
-
-function testScrypt(i) {
-  var v = good[i];
+var input_output_test = function(i, done) {
+  var v = inputs[i];
   scrypt(v.password, v.salt, v.logN, v.r, v.result.length/2, 1000, function(out) {
     if (v.result != out) {
-      console.error(i, 'FAIL! Expected', v.result, 'got', out);
+      should.fail("fail on input " + i + 1);
     } else {
-      console.log(i, 'PASS')
-    }
-    if (i < good.length-1) {
-      // Run next test.
-      testScrypt(i+1);
-    } else {
-      // Finished.
-      console.log('Finished in ' + ((new Date()) - startTime) +  ' ms');
+      done();
     }
   }, 'hex');
 }
 
-console.log('Running tests...');
-testScrypt(0);
+describe('input/output test', function(){
+  this.timeout(50000);
+
+  it('input 0', function(done) {
+    input_output_test(0, done);
+  });
+  it('input 1', function(done) {
+    input_output_test(1, done);
+  });
+  it('input 2', function(done) {
+    input_output_test(2, done);
+  });
+  it('input 3', function(done) {
+    input_output_test(3, done);
+  });
+
+});
