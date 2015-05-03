@@ -43,7 +43,8 @@ module.exports = function(grunt) {
     uglify: {
       scrypt: {
         files: {
-          'scrypt-async.min.js' : [ 'scrypt-async.js' ]
+          'scrypt-async.min.js' : [ 'scrypt-async.js' ],
+          'scrypt-async.worker.min.js' : [ 'scrypt-async.worker.js' ]
         }
       }
     }
