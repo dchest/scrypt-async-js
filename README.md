@@ -2,7 +2,7 @@ scrypt-async
 ============
 
 [![Build Status](https://travis-ci.org/dchest/scrypt-async-js.svg?branch=master)](https://travis-ci.org/dchest/scrypt-async-js)
-[![Coverage Status](https://coveralls.io/repos/evilaliv3/scrypt-async-js/badge.svg?branch=feature%2Fwebworker)](https://coveralls.io/r/evilaliv3/scrypt-async-js?branch=feature%2Fwebworker)
+[![Coverage Status](https://coveralls.io/repos/dchest/scrypt-async-js/badge.svg)](https://coveralls.io/r/dchest/scrypt-async-js)
 
 Fast "async" scrypt implementation in JavaScript.
 
