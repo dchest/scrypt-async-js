@@ -1,5 +1,6 @@
-test
 .travis.yml
-bower.json
-demo.html
 Gruntfile.js
+bower.json
+coverage
+demo.html
+test
