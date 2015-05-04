@@ -290,7 +290,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
           } else {
               arr.push((c>>12) | 224);
               arr.push(((c>>6) & 63) | 128);
-              arr.push((c & 64) | 128);
+              arr.push((c & 63) | 128);
           }
       }
       return arr;
