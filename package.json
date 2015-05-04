@@ -3,6 +3,10 @@
   "version": "1.0.1",
   "description": "Fast \"async\" scrypt implementation in JavaScript.",
   "main": "scrypt-async.js",
+  "scripts": {
+    "test": "grunt test",
+    "build": "grunt build"
+  },
   "devDependencies": {
     "chai": "~2.3.0",
     "coveralls": "^2.11.2",
