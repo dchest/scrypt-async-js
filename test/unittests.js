@@ -11,14 +11,6 @@ var inputs = [
     result: 'c3f182ee2dec846e70a6942fb529985a3a09765ef04c612923b17f18555a37076deb2b9830d69de5492651e4506ae5776d96d40f67aaee37e1777b8ad5c3111432bb3b6f7e1264401879e641aea2bd0a21a124fd5c1ece0891338d2c44ba312e497bd93660fc053a5df35ade0ca48fd0f3c6c0f6143bb3548420a7cbf6ce7c82bc6b56c8e33adbf6fbac9e0ffc4aa9fb9fcd97fd393700b7d8eac55d45d4651bdb1a270c35c8d40a22e1b2429d6521c4c673e4ba7e7f4a9638ec3b1adbc6dcab64e211b5a26df8f274511be41228cd9a4fae3ada5236ebf39dfc6cd1864652a16516fb622502205d9fdbf09dc6fa964b57cc468ee8d98e4a00bf064222dafec8'
   },
   {
-    password: 'this is a long \x00 password',
-    salt: 'and this is a long \x00 salt',
-    logN: 14,
-    r: 8,
-    encoding: 'base64',
-    result: 'w/GC7i3shG5wppQvtSmYWjoJdl7wTGEpI7F/GFVaNwdt6yuYMNad5UkmUeRQauV3bZbUD2eq7jfhd3uK1cMRFDK7O29+EmRAGHnmQa6ivQohoST9XB7OCJEzjSxEujEuSXvZNmD8BTpd81reDKSP0PPGwPYUO7NUhCCny/bOfIK8a1bI4zrb9vusng/8Sqn7n82X/Tk3ALfY6sVdRdRlG9saJww1yNQKIuGyQp1lIcTGc+S6fn9KljjsOxrbxtyrZOIRtaJt+PJ0URvkEijNmk+uOtpSNuvznfxs0YZGUqFlFvtiJQIgXZ/b8J3G+pZLV8xGjujZjkoAvwZCItr+yA=='
-  },
-  {
     password: 'p',
     salt: 's',
     logN: 1,
@@ -57,14 +49,6 @@ var inputs = [
     r: 8,
     encoding: 'hex',
     result: '7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887c3b5417f26036e90e9c1fe355d24ee3623c8b8bad9b9aa93286c6429dbc0bfa2e69326c0806f7dc5f825a6b9cc32d18483a117c1ea78e2f38675579c811c0b67c262dbab7fe2b6d989d07fac3443c859cf7b34fed8cc5b279f7bdbf6e0cd8d90a82fe56f3ac7a5b81f98275c9c5cb69f19c8bddc33db6bd7da847ec3197e13f33f70b00a46836b7c0a0379559160ef42c8332097f7ca265fe6ff972ce1ffb515ff7e4e715e4c92839113ea67f2515f311549fc7eee49804136fb0830abb943d3'
-  },
-  {
-    password: 'pleaseletmein',
-    salt: 'SodiumChloride',
-    logN: 14,
-    r: 8,
-    encoding: 'base64',
-    result: 'cCO9yzr9c0hGHAbNgf046/2o+7qQT44+qbVD9lRdofLVQylVYT8Pz2LUlwUkKpr55h6F3A1lHkDfzwF7RVdYh8O1QX8mA26Q6cH+NV0k7jYjyLi62bmqkyhsZCnbwL+i5pMmwIBvfcX4Jaa5zDLRhIOhF8HqeOLzhnVXnIEcC2fCYturf+K22YnQf6w0Q8hZz3s0/tjMWyefe9v24M2NkKgv5W86x6W4H5gnXJxctp8ZyL3cM9tr19qEfsMZfhPzP3CwCkaDa3wKA3lVkWDvQsgzIJf3yiZf5v+XLOH/tRX/fk5xXkySg5ET6mfyUV8xFUn8fu5JgEE2+wgwq7lD0w=='
   }
 ]
 
@@ -77,7 +61,7 @@ var input_output_test = function(i, done) {
 }
 
 describe('input/output test', function(){
-  this.timeout(50000);
+  this.timeout(60000);
 
   it('input 0', function(done) {
     input_output_test(0, done);
@@ -96,12 +80,6 @@ describe('input/output test', function(){
   });
   it('input 5', function(done) {
     input_output_test(5, done);
-  });
-  it('input 6', function(done) {
-    input_output_test(6, done);
-  });
-  it('input 7', function(done) {
-    input_output_test(7, done);
   });
 
 });
