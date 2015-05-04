@@ -8,6 +8,14 @@ module.exports = function(grunt) {
         }
       }
     },
+    connect: {
+      server: {
+        options: {
+          port: 3000,
+          base: './test'
+        }
+      }
+    },
     copy: {
       test: {
         expand: true,
@@ -40,6 +48,21 @@ module.exports = function(grunt) {
         src: [ 'test/unittests.js' ]
       }
     },
+    'saucelabs-mocha': {
+      all: {
+        options: {
+          username: 'evilaliv3',
+          key: '226224a2-430f-4633-830b-d33640621fee',
+          urls: ['http://127.0.0.1:3000/unittests.html'],
+          build: process.env.TRAVIS_JOB_ID,
+          testname: 'Sauce Unit Test for scrypt-async-js',
+          browsers: grunt.file.readYAML('grunt/sauce_browsers.yml'),
+          public: "public",
+          maxRetries: 3,
+          throttled: 2
+        }
+      },
+    },
     uglify: {
       scrypt: {
         options: {
@@ -53,10 +76,12 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mocha-istanbul')
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
+  grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.event.on('coverage', function(lcov, done){
@@ -72,4 +97,5 @@ module.exports = function(grunt) {
   grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
   grunt.registerTask('coveralls', ['mocha_istanbul:coveralls']);
   grunt.registerTask('test', ['browserify', 'copy:test', 'mochaTest', 'mocha_phantomjs']);
+  grunt.registerTask('saucelabs', ['connect', 'saucelabs-mocha']);
 };
