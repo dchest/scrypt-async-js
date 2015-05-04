@@ -73,13 +73,25 @@ var inputs = [
     dkLen: 16,
     encoding: 'base64',
     result: 'FYjFuH0fb+qfG0Q0n5WFVQ=='
+  },
+  {
+    password: 'hello',
+    salt: 'world',
+    logN: 5,
+    r: 8,
+    dkLen: 48,
+    encoding: null,
+    result: [212, 108, 63, 108, 230, 193, 1, 5, 181, 168, 169, 234, 8, 53, 241,
+      76, 44, 108, 85, 218, 223, 158, 113, 64, 94, 114, 7, 160, 1, 160, 174,
+      43, 11, 22, 144, 102, 217, 198, 114, 226, 91, 245, 240, 80, 28, 210, 107,
+      239]
   }
 ]
 
 var input_output_test = function(i, done) {
   var v = inputs[i];
   scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
-    assert.equal(v.result, out);
+    assert.deepEqual(v.result, out);
     done();
   }, v.encoding);
 }
@@ -110,6 +122,9 @@ describe('input/output test', function(){
   });
   it('input 7', function(done) {
     input_output_test(7, done);
+  });
+  it('input 8', function(done) {
+    input_output_test(8, done);
   });
 
 });
