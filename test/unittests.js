@@ -230,6 +230,15 @@ var inputs = [
             'OhW8rx9L9XSPXTrMAm+Yk1+Vhe0RSlOWg/ZP6RDCV2UAa8uxlpJdgtnas9ndc9f6cSXRhrLiaqI/tHd2'+
             'KokyJqiJbRow0/Kd14J9CnjDJB3PrGKtDjcwwyhNNmu1cH8jgK12JKIjbIXXSylH0WgIMfr1xz9Otvku'+
             '67WElrWTYkas4lOMKyJtLfJOOG7Tzqqbhw7GLQ4OgSGhu'
+  },
+  {
+    password: 'this is a very long string, which should be pre-hashed by PBKDF2 as it exceeds block size',
+    salt: 'some salt',
+    logN: 4,
+    r: 4,
+    dkLen: 16,
+    encoding: 'hex',
+    result: '518a355ac6468a4d98708adf03577df6'
   }
 ]
 
@@ -273,6 +282,9 @@ describe('input/output test', function(){
   });
   it('input 9', function(done) {
     input_output_test(9, done);
+  });
+  it('input 10', function(done) {
+    input_output_test(10, done);
   });
 
 });
