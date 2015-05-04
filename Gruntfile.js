@@ -42,6 +42,9 @@ module.exports = function(grunt) {
     },
     uglify: {
       scrypt: {
+        options: {
+          preserveComments: 'some'
+        },
         files: {
           'scrypt-async.min.js' : [ 'scrypt-async.js' ]
         }
