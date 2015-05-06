@@ -33,6 +33,7 @@ module.exports = function(grunt) {
         src: ['test'],
         options: {
           coverage:true,
+          timeout: 4000,
           reportFormats: ['cobertura','lcovonly']
         }
       }
@@ -43,7 +44,8 @@ module.exports = function(grunt) {
     mochaTest: {
       unittests: {
         options: {
-          reporter: 'spec'
+          reporter: 'spec',
+          timeout: 4000
         },
         src: [ 'test/unittests.js' ]
       }
@@ -59,7 +61,9 @@ module.exports = function(grunt) {
           browsers: grunt.file.readYAML('grunt/sauce_browsers.yml'),
           public: "public",
           maxRetries: 3,
-          throttled: 2
+          throttled: 2,
+          pollInterval: 4000,
+          statusCheckAttempts: 200
         }
       },
     },
