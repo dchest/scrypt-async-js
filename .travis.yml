@@ -6,6 +6,6 @@ node_js:
 before_script:
   - npm install -g grunt-cli
 script:
-  - grunt test
-  - grunt coveralls
-  - grunt saucelabs
+  - grunt build
+  - grunt test_and_coveralls
+  - grunt saucelabs || true

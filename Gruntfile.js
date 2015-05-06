@@ -27,28 +27,22 @@ module.exports = function(grunt) {
     },
     mocha_istanbul: {
       coverage: {
-        src: 'test'
+        src: 'test',
+        options: {
+          timeout: 6000,
+        }
       },
       coveralls: {
         src: ['test'],
         options: {
           coverage:true,
-          timeout: 4000,
+          timeout: 6000,
           reportFormats: ['cobertura','lcovonly']
         }
       }
     },
     mocha_phantomjs: {
       all: ['test/**/*.html']
-    },
-    mochaTest: {
-      unittests: {
-        options: {
-          reporter: 'spec',
-          timeout: 4000
-        },
-        src: [ 'test/unittests.js' ]
-      }
     },
     'saucelabs-mocha': {
       all: {
@@ -86,7 +80,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-istanbul')
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-saucelabs');
-  grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.event.on('coverage', function(lcov, done){
       require('coveralls').handleInput(lcov, function(err){
@@ -98,8 +91,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('build', ['uglify']);
-  grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
-  grunt.registerTask('coveralls', ['mocha_istanbul:coveralls']);
-  grunt.registerTask('test', ['browserify', 'copy:test', 'mochaTest', 'mocha_phantomjs']);
+  grunt.registerTask('test', ['browserify', 'copy:test', 'mocha_istanbul', 'mocha_phantomjs']);
+  grunt.registerTask('test_and_coveralls', ['browserify', 'copy:test', 'mocha_istanbul:coveralls', 'mocha_phantomjs']);
   grunt.registerTask('saucelabs', ['connect', 'saucelabs-mocha']);
 };
