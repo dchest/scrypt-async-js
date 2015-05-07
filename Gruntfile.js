@@ -47,8 +47,8 @@ module.exports = function(grunt) {
     'saucelabs-mocha': {
       all: {
         options: {
-          username: 'evilaliv3',
-          key: '226224a2-430f-4633-830b-d33640621fee',
+          username: 'dchest',
+          key: 'cc31fbb6-680a-4e2f-93f2-0153ffdf03ff',
           urls: ['http://127.0.0.1:3000/unittests.html'],
           build: process.env.TRAVIS_JOB_ID,
           testname: 'Sauce Unit Test for scrypt-async-js',
