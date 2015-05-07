@@ -1,10 +1,9 @@
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12.2"
-  - iojs
+  - "stable"
 before_script:
   - npm install -g grunt-cli
 script:
-  - grunt test
-  - grunt coveralls
+  - grunt build
+  - grunt test_and_coveralls
+  - grunt saucelabs || true
