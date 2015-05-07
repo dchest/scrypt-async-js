@@ -22,7 +22,6 @@
     "Gruntfile.js",
     "bower_components",
     "demo.html",
-    "grunt",
     "node_modules",
     "test"
   ]
