@@ -10,4 +10,4 @@ before_script:
 script:
   - grunt build
   - grunt test_and_coveralls
-  - grunt saucelabs || true
+  - travis_wait grunt saucelabs
