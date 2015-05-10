@@ -251,7 +251,7 @@ var input_output_test = function(i, done) {
 }
 
 describe('input/output test', function(){
-  this.timeout(60000);
+  this.timeout(100000);
 
   it('input 0', function(done) {
     input_output_test(0, done);
