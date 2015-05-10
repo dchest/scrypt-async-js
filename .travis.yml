@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "stable"
+env:
+  global:
+    - secure: TmxgaOPzGrz3s6+O6ssYDJtH75gta2d+q6H1cdZBsq0IhD8Cf/mKKCECbk9fJyWYUpVA+cpH3PnVwuOyiMDM0gwA9h+v3osZfhPuyFE1TxwaWFLsluNo9xcD0OEetpkHvC7Nxl83MIwQglIDK2vVPIRpAV4+64+3I9aHya/wIw0=
+    - secure: bXi+5Tma2X8WDLR90YrFcqoadYUc2ik9zPjBrHAcLmZu+pjds4DvZXUswoxSD4N1jF5XQt1Bk56z+ajEYGfp7f5s9s7tf800aOKstwvwWlt8kMbY+v49Wa5E63SPYsXnu/PltFcxra+vGD7q9HFLzXIcLiGXPlC/28EjesHx+K0=
 before_script:
   - npm install -g grunt-cli
 script:
