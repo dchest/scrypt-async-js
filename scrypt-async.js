@@ -424,11 +424,11 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     })();
   }
 
-  function getResult() {
+  function getResult(enc) {
       var result = PBKDF2_HMAC_SHA256_OneIter(password, B, dkLen);
-      if (encoding === 'base64')
+      if (enc === 'base64')
         return bytesToBase64(result);
-      else if (encoding === 'hex')
+      else if (enc === 'hex')
         return bytesToHex(result);
       else
         return result;
@@ -448,23 +448,37 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     encoding = interruptStep;
   }
 
-  if (!isSync) {
-    // Async variant, calls callback with result.
-    smixStart();
-    interruptedFor(0, N, interruptStep*2, smixStep1, function() {
-      interruptedFor(0, N, interruptStep*2, smixStep2, function () {
-        smixFinish();
-        callback(getResult());
-      });
-    });
-
-  } else {
+  if (isSync) {
+    //
     // Sync variant, returns result.
+    //
     smixStart();
     smixStep1(0, N);
     smixStep2(0, N);
     smixFinish();
-    return getResult();
+    return getResult(encoding);
+
+  } else if (interruptStep <= 0) {
+    //
+    // Blocking async variant, calls callback.
+    //
+    smixStart();
+    smixStep1(0, N);
+    smixStep2(0, N);
+    smixFinish();
+    callback(getResult(encoding));
+
+  } else {
+    //
+    // Async variant with interruptions, calls callback.
+    //
+    smixStart();
+    interruptedFor(0, N, interruptStep*2, smixStep1, function() {
+      interruptedFor(0, N, interruptStep*2, smixStep2, function () {
+        smixFinish();
+        callback(getResult(encoding));
+      });
+    });
   }
 }
 

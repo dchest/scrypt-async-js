@@ -287,6 +287,13 @@ describe('argument order test', function() {
     }, "hex");
   });
 
+  it('all arguments, zero interruptStep', function(done) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 0, function(out) {
+      assert.equal(v.hexResult, out);
+      done();
+    }, "hex");
+  });
+
   it('drop encoding', function(done) {
     scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
       assert.deepEqual(v.result, out);
