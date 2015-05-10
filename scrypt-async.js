@@ -427,23 +427,48 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     })();
   }
 
-  // Note: step argument for interruptedFor must be divisible by
-  // two, since smixStepX work in increments of 2.
-  if (!interruptStep) interruptStep = 1000;
-  
-  smixStart();
-  interruptedFor(0, N, interruptStep*2, smixStep1, function() {
-    interruptedFor(0, N, interruptStep*2, smixStep2, function () {
-      smixFinish();
+  function getResult() {
       var result = PBKDF2_HMAC_SHA256_OneIter(password, B, dkLen);
-      if (encoding == "base64")
-        callback(bytesToBase64(result));
-      else if (encoding == "hex")
-        callback(bytesToHex(result));
+      if (encoding == 'base64')
+        return bytesToBase64(result);
+      else if (encoding == 'hex')
+        return bytesToHex(result);
       else
-        callback(result);
+        return result;
+  }
+
+  var isSync = false;
+  if (typeof interruptStep === 'function') {
+    // Called as: scrypt(...,      callback, [encoding])
+    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
+    encoding = callback;
+    callback = interruptStep;
+    interruptStep = 1000;
+  } else if (typeof interruptStep === 'undefined' || typeof interruptStep === 'string') {
+    // Called as: scrypt(..., [encoding])
+    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
+    isSync = true;
+    encoding = interruptStep;
+  }
+
+  if (!isSync) {
+    // Async variant, calls callback with result.
+    smixStart();
+    interruptedFor(0, N, interruptStep*2, smixStep1, function() {
+      interruptedFor(0, N, interruptStep*2, smixStep2, function () {
+        smixFinish();
+        callback(getResult());
+      });
     });
-  });
+
+  } else {
+    // Sync variant, returns result.
+    smixStart();
+    smixStep1(0, N);
+    smixStep2(0, N);
+    smixFinish();
+    return getResult();
+  }
 }
 
 if (typeof module !== 'undefined') module.exports = scrypt;

@@ -3,15 +3,6 @@ var assert = require("assert");
 
 var inputs = [
   {
-    password: 'this is a long \x00 password',
-    salt: 'and this is a long \x00 salt',
-    logN: 14,
-    r: 8,
-    dkLen: 256,
-    encoding: 'hex',
-    result: 'c3f182ee2dec846e70a6942fb529985a3a09765ef04c612923b17f18555a37076deb2b9830d69de5492651e4506ae5776d96d40f67aaee37e1777b8ad5c3111432bb3b6f7e1264401879e641aea2bd0a21a124fd5c1ece0891338d2c44ba312e497bd93660fc053a5df35ade0ca48fd0f3c6c0f6143bb3548420a7cbf6ce7c82bc6b56c8e33adbf6fbac9e0ffc4aa9fb9fcd97fd393700b7d8eac55d45d4651bdb1a270c35c8d40a22e1b2429d6521c4c673e4ba7e7f4a9638ec3b1adbc6dcab64e211b5a26df8f274511be41228cd9a4fae3ada5236ebf39dfc6cd1864652a16516fb622502205d9fdbf09dc6fa964b57cc468ee8d98e4a00bf064222dafec8'
-  },
-  {
     password: 'p',
     salt: 's',
     logN: 1,
@@ -48,15 +39,6 @@ var inputs = [
     result: 'd9ZXYjhleyA7GcpCwYoEl/FrSETjB0ro39/6P+3iFEL80Aad7QlI+DJqdToPyB8X6NPg+y4NNijPNeIMONGJBs5zIGZWz4werX9PZjDQra4f2IeLd8O0aduRnwFZf2E6wveK7FpcZ8JVgzEZ6z5mtpd+bn4y4IV7eW37vCfj4HbldcVfZhVjQy1EUkJ9iiGkv8D095UyGB0BHsvZ8hDjAbkl6CytuuwBXS2ksRIvUestefIuKLfhIEoV50H+v5uUUm1X5yd9eqEumsilj9TEL2kiRwFWy9J57BYZxXTUXEF3KGMigDxgRtixTB9sVrbi4i0HfgoxdLqddlqE9SsRzQ=='
   },
   {
-    password: 'pleaseletmein',
-    salt: 'SodiumChloride',
-    logN: 14,
-    r: 8,
-    dkLen: 256,
-    encoding: 'hex',
-    result: '7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887c3b5417f26036e90e9c1fe355d24ee3623c8b8bad9b9aa93286c6429dbc0bfa2e69326c0806f7dc5f825a6b9cc32d18483a117c1ea78e2f38675579c811c0b67c262dbab7fe2b6d989d07fac3443c859cf7b34fed8cc5b279f7bdbf6e0cd8d90a82fe56f3ac7a5b81f98275c9c5cb69f19c8bddc33db6bd7da847ec3197e13f33f70b00a46836b7c0a0379559160ef42c8332097f7ca265fe6ff972ce1ffb515ff7e4e715e4c92839113ea67f2515f311549fc7eee49804136fb0830abb943d3'
-  },
-  {
     password: 'пароль',
     salt: 'соль',
     logN: 4,
@@ -73,18 +55,6 @@ var inputs = [
     dkLen: 16,
     encoding: 'base64',
     result: 'FYjFuH0fb+qfG0Q0n5WFVQ=='
-  },
-  {
-    password: 'hello',
-    salt: 'world',
-    logN: 5,
-    r: 8,
-    dkLen: 48,
-    encoding: null,
-    result: [212, 108, 63, 108, 230, 193, 1, 5, 181, 168, 169, 234, 8, 53, 241,
-      76, 44, 108, 85, 218, 223, 158, 113, 64, 94, 114, 7, 160, 1, 160, 174,
-      43, 11, 22, 144, 102, 217, 198, 114, 226, 91, 245, 240, 80, 28, 210, 107,
-      239]
   },
   {
     password: [104, 101, 108, 108, 111], // "hello"
@@ -239,10 +209,111 @@ var inputs = [
     dkLen: 16,
     encoding: 'hex',
     result: '518a355ac6468a4d98708adf03577df6'
+  },
+  {
+    password: 'hello',
+    salt: 'world',
+    logN: 5,
+    r: 8,
+    dkLen: 48,
+    encoding: null,
+    result: [212, 108, 63, 108, 230, 193, 1, 5, 181, 168, 169, 234, 8, 53, 241,
+      76, 44, 108, 85, 218, 223, 158, 113, 64, 94, 114, 7, 160, 1, 160, 174,
+      43, 11, 22, 144, 102, 217, 198, 114, 226, 91, 245, 240, 80, 28, 210, 107,
+      239]
+  },
+  {
+    password: 'pleaseletmein',
+    salt: 'SodiumChloride',
+    logN: 14,
+    r: 8,
+    dkLen: 256,
+    encoding: 'hex',
+    result: '7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887c3b5417f26036e90e9c1fe355d24ee3623c8b8bad9b9aa93286c6429dbc0bfa2e69326c0806f7dc5f825a6b9cc32d18483a117c1ea78e2f38675579c811c0b67c262dbab7fe2b6d989d07fac3443c859cf7b34fed8cc5b279f7bdbf6e0cd8d90a82fe56f3ac7a5b81f98275c9c5cb69f19c8bddc33db6bd7da847ec3197e13f33f70b00a46836b7c0a0379559160ef42c8332097f7ca265fe6ff972ce1ffb515ff7e4e715e4c92839113ea67f2515f311549fc7eee49804136fb0830abb943d3'
+  },
+  {
+    password: 'this is a long \x00 password',
+    salt: 'and this is a long \x00 salt',
+    logN: 14,
+    r: 8,
+    dkLen: 256,
+    encoding: 'hex',
+    result: 'c3f182ee2dec846e70a6942fb529985a3a09765ef04c612923b17f18555a37076deb2b9830d69de5492651e4506ae5776d96d40f67aaee37e1777b8ad5c3111432bb3b6f7e1264401879e641aea2bd0a21a124fd5c1ece0891338d2c44ba312e497bd93660fc053a5df35ade0ca48fd0f3c6c0f6143bb3548420a7cbf6ce7c82bc6b56c8e33adbf6fbac9e0ffc4aa9fb9fcd97fd393700b7d8eac55d45d4651bdb1a270c35c8d40a22e1b2429d6521c4c673e4ba7e7f4a9638ec3b1adbc6dcab64e211b5a26df8f274511be41228cd9a4fae3ada5236ebf39dfc6cd1864652a16516fb622502205d9fdbf09dc6fa964b57cc468ee8d98e4a00bf064222dafec8'
   }
-]
+];
 
-var input_output_test = function(i, done) {
+var shortInput = {
+  password: 'password',
+  salt: 'salt',
+  logN: 1,
+  r: 1,
+  dkLen: 16,
+  hexResult: '6d1bb878eee9ce4a7b77d7a44103574d',
+  result: [109, 27, 184, 120, 238, 233, 206, 74, 123, 119, 215, 164, 65, 3, 87, 77]
+};
+
+describe('limits test', function() {
+  var v = shortInput;
+
+  it('should throw with too small logN', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, 0, v.r, v.dkLen);
+    }, Error);
+  });
+
+  it('should throw with too big logN', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, 32, v.r, v.dkLen);
+    }, Error);
+  });
+
+  it('should throw with too large parameters', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, v.logN, 1<<31, v.dkLen);
+    }, Error);
+  });
+
+});
+
+describe('argument order test', function() {
+  this.timeout(100000);
+
+  var v = shortInput;
+
+  it('all arguments', function(done) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
+      assert.equal(v.hexResult, out);
+      done();
+    }, "hex");
+  });
+
+  it('drop encoding', function(done) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
+      assert.deepEqual(v.result, out);
+      done();
+    });
+  });
+
+  it('drop interruptStep, keep encoding', function(done) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, function(out) {
+      assert.equal(v.hexResult, out);
+      done();
+    }, 'hex');
+  });
+
+  it('drop interruptStep and callback, keep encoding (sync)', function() {
+    var out = scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 'hex');
+    assert.equal(v.hexResult, out);
+  });
+
+  it('drop interruptStep, callback, and encoding (sync)', function() {
+    var out = scrypt(v.password, v.salt, v.logN, v.r, v.dkLen);
+    assert.deepEqual(v.result, out);
+  });
+
+});
+
+function async_test(i, done) {
   var v = inputs[i];
   scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
     assert.deepEqual(v.result, out);
@@ -250,41 +321,67 @@ var input_output_test = function(i, done) {
   }, v.encoding);
 }
 
-describe('input/output test', function(){
+describe('async input/output test', function() {
   this.timeout(100000);
 
   it('input 0', function(done) {
-    input_output_test(0, done);
+    async_test(0, done);
   });
   it('input 1', function(done) {
-    input_output_test(1, done);
+    async_test(1, done);
   });
   it('input 2', function(done) {
-    input_output_test(2, done);
+    async_test(2, done);
   });
   it('input 3', function(done) {
-    input_output_test(3, done);
+    async_test(3, done);
   });
   it('input 4', function(done) {
-    input_output_test(4, done);
+    async_test(4, done);
   });
   it('input 5', function(done) {
-    input_output_test(5, done);
+    async_test(5, done);
   });
   it('input 6', function(done) {
-    input_output_test(6, done);
+    async_test(6, done);
   });
   it('input 7', function(done) {
-    input_output_test(7, done);
+    async_test(7, done);
   });
   it('input 8', function(done) {
-    input_output_test(8, done);
+    async_test(8, done);
   });
   it('input 9', function(done) {
-    input_output_test(9, done);
+    async_test(9, done);
   });
   it('input 10', function(done) {
-    input_output_test(10, done);
+    async_test(10, done);
+  });
+
+});
+
+function sync_test(i) {
+  var v = inputs[i];
+  var out = scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, v.encoding);
+  assert.deepEqual(v.result, out);
+}
+
+describe('sync input/output test', function() {
+  this.timeout(100000);
+
+  // Only shorter tests:
+
+  it('input 0', function() {
+    sync_test(0);
+  });
+  it('input 1', function() {
+    sync_test(1);
+  });
+  it('input 2', function() {
+    sync_test(2);
+  });
+  it('input 3', function() {
+    sync_test(3);
   });
 
 });
