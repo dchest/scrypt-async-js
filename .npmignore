@@ -3,5 +3,4 @@ Gruntfile.js
 bower.json
 coverage
 demo.html
-grunt
 test

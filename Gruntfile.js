@@ -26,12 +26,6 @@ module.exports = function(grunt) {
       }
     },
     mocha_istanbul: {
-      coverage: {
-        src: 'test',
-        options: {
-          timeout: 6000,
-        }
-      },
       coveralls: {
         src: ['test'],
         options: {
@@ -47,12 +41,66 @@ module.exports = function(grunt) {
     'saucelabs-mocha': {
       all: {
         options: {
-          username: 'evilaliv3',
-          key: '226224a2-430f-4633-830b-d33640621fee',
+          username: process.env.SAUCE_USERNAME,
+          key: process.env.SAUCE_ACCESS_KEY,
           urls: ['http://127.0.0.1:3000/unittests.html'],
           build: process.env.TRAVIS_JOB_ID,
           testname: 'Sauce Unit Test for scrypt-async-js',
-          browsers: grunt.file.readYAML('grunt/sauce_browsers.yml'),
+          browsers: [
+            {
+              browserName: "safari",
+              platform: "OS X 10.10"
+            },
+            {
+              browserName: "chrome",
+              platform: "OS X 10.10"
+            },
+            {
+              browserName: "firefox",
+              platform: "OS X 10.10"
+            },
+            {
+              browserName: "internet explorer",
+              version: "11",
+              platform: "Windows 8.1"
+            },
+            {
+              browserName: "internet explorer",
+              version: "10",
+              platform: "Windows 8"
+            },
+            {
+              browserName: "internet explorer",
+              version: "9",
+              platform: "Windows 7"
+            },
+            {
+              browserName: "internet explorer",
+              version: "8",
+              platform: "Windows 7"
+            },
+            {
+              browserName: "chrome",
+              platform: "Windows 8.1"
+            },
+            {
+              browserName: "firefox",
+              platform: "Windows 8.1"
+            },
+            {
+              browserName: "iphone",
+              platform: "OS X 10.10",
+              version: "8.2"
+            },
+            {
+              browserName: "chrome",
+              platform: "Linux"
+            },
+            {
+              browserName: "firefox",
+              platform: "Linux"
+            }
+          ],
           public: "public",
           maxRetries: 3,
           throttled: 2,
