@@ -1,6 +1,6 @@
 /*!
  * Fast "async" scrypt implementation in JavaScript.
- * Copyright (c) 2013-2014 Dmitry Chestnykh | BSD License
+ * Copyright (c) 2013-2015 Dmitry Chestnykh | BSD License
  * https://github.com/dchest/scrypt-async-js
  */
 
@@ -9,19 +9,16 @@
  */
 
 /**
- * scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding)
+ * scrypt(password, salt, logN, r, dkLen, interruptStep, callback, [encoding])
+ * scrypt(password, salt, logN, r, dkLen, callback, [encoding])
  *
- * Derives a key from password and salt and calls callback
+ * Async: derives a key from password and salt and calls callback
  * with derived key as the only argument.
  *
- * @param {string|Array.<number>} password Password.
- * @param {string|Array.<number>} salt Salt.
- * @param {number} logN  CPU/memory cost parameter (1 to 31).
- * @param {number} r     Block size parameter.
- * @param {number} dkLen Length of derived key.
- * @param {number} interruptStep Steps to split calculation with timeouts (default 1000).
- * @param {function(string)} callback Callback function.
- * @param {string?} encoding Result encoding ("base64", "hex", or null).
+ * scrypt(password, salt, logN, r, dkLen, [encoding]) -> returns result
+ *
+ * Sync: returns derived key.
+ *
  */
 function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
   'use strict';
@@ -333,7 +330,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     }
     if (len % 3 > 0) {
       arr[arr.length-1] = '=';
-      if (len % 3 == 1) arr[arr.length-2] = '=';
+      if (len % 3 === 1) arr[arr.length-2] = '=';
     }
     return arr.join('');
   }
@@ -355,9 +352,9 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     throw new Error('scrypt: parameters are too large');
 
   // Decode strings.
-  if (typeof password == 'string')
+  if (typeof password === 'string')
     password = stringToUTF8Bytes(password);
-  if (typeof salt == 'string')
+  if (typeof salt === 'string')
     salt = stringToUTF8Bytes(salt);
 
   if (typeof Int32Array !== 'undefined') {
@@ -429,9 +426,9 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   function getResult() {
       var result = PBKDF2_HMAC_SHA256_OneIter(password, B, dkLen);
-      if (encoding == 'base64')
+      if (encoding === 'base64')
         return bytesToBase64(result);
-      else if (encoding == 'hex')
+      else if (encoding === 'hex')
         return bytesToHex(result);
       else
         return result;
