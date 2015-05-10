@@ -3,8 +3,8 @@ node_js:
   - "stable"
 env:
   global:
-    - secure: TmxgaOPzGrz3s6+O6ssYDJtH75gta2d+q6H1cdZBsq0IhD8Cf/mKKCECbk9fJyWYUpVA+cpH3PnVwuOyiMDM0gwA9h+v3osZfhPuyFE1TxwaWFLsluNo9xcD0OEetpkHvC7Nxl83MIwQglIDK2vVPIRpAV4+64+3I9aHya/wIw0=
-    - secure: bXi+5Tma2X8WDLR90YrFcqoadYUc2ik9zPjBrHAcLmZu+pjds4DvZXUswoxSD4N1jF5XQt1Bk56z+ajEYGfp7f5s9s7tf800aOKstwvwWlt8kMbY+v49Wa5E63SPYsXnu/PltFcxra+vGD7q9HFLzXIcLiGXPlC/28EjesHx+K0=
+    - secure: gE94p4lNCyykk224+raAgKdXVETUc6K+sYxw5OXUgRrF/44USzaL7lh9wiXE9z+rJpiA6art4Wlu3SzDTi02UpOOvbHC57wEGXJk93oMB8N1LLT2+MQ1juBDMTmQpWdF2dQNISYpMUjOzvSTZOrrV6DAtTaictWj+2sAT0cashg=
+    - secure: EvBp6t/20uEfr68XZd2y7bAqgwgZMvbQdE8HDgxbELghiJvZ/PqMo8UcWmBLPyymiDL5XRFtUDOW0Tt1tcQnF6q/D6gIz6+3SLtB/pUcejh3HDTuNM0vqHyCAWbXt+nGnTCAM32sS6tveY7eM8F2SjGmxf1ARLjvMBKwBKSs40c=
 before_script:
   - npm install -g grunt-cli
 script:
