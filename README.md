@@ -30,19 +30,28 @@ You can install it via a package manager:
 or [download source code](https://github.com/dchest/scrypt-async-js/releases).
 
 
-Limitation
-----------
-
-Doesn't support parallelization parameter greater than 1.
-
-
 Usage
 -----
 
-### scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding)
-	
-Derives a key from password and salt and calls callback with derived
-key as the only argument.
+There are three general ways to call scrypt:
+
+### scrypt(password, salt, logN, r, dkLen, interruptStep, callback, [encoding])
+
+Derives a key from password and salt and calls callback with derived key as the
+only argument. The calculations are interrupted with zero setTimeout at the
+given interruptSteps to avoid freezing the browser. Encoding is optional.
+
+### scrypt(password, salt, logN, r, dkLen, callback, [encoding])
+
+Same as first, but uses default interruptStep (1000). Encoding is optional.
+
+### scrypt(password, salt, logN, r, dkLen, [encoding]) -> returns result
+
+Synchronous: doesn't interrupt calculations and returns the result instead of
+passing it to callback. Encoding is optional. Perfect for use in web workers.
+
+
+#### Arguments:
 	
 * *password* - password (string or array of bytes)
 * *salt* - salt (string or array of bytes)
@@ -50,8 +59,16 @@ key as the only argument.
 * *r* - block size parameter
 * *dkLen* - length of derived key
 * *interruptStep* - steps to split calculation with timeouts (default 1000)
-* *callback* - callback function (`function (string)`)
-* *encoding* - (optional) result encoding (`"base64"`, `"hex"`, or `null`).
+* *callback* - callback function (`function (array|string)`)
+* *encoding* - result encoding (`"base64"`, `"hex"`, or `null`).
+
+When encoding is not set, the result is an `Array` of bytes.
+
+
+Limitation
+----------
+
+Doesn't support parallelization parameter greater than 1.
 
 
 License
