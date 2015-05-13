@@ -30,28 +30,37 @@ You can install it via a package manager:
 or [download source code](https://github.com/dchest/scrypt-async-js/releases).
 
 
-Limitation
-----------
-
-Doesn't support parallelization parameter greater than 1.
-
-
 Usage
 -----
 
-### scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding)
-	
-Derives a key from password and salt and calls callback with derived
-key as the only argument.
+### scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
+
+Derives a key from password and salt and calls callback
+with derived key as the only argument.
+
+Calculations are interrupted with zero setTimeout at the given
+interruptSteps to avoid freezing the browser. If interruptStep is not given,
+it defaults to 1000. If it's zero, the callback is called immediately after
+calculation, avoiding setTimeout.
+
+#### Arguments:
 	
 * *password* - password (string or array of bytes)
 * *salt* - salt (string or array of bytes)
 * *logN* - CPU/memory cost parameter (1 to 31)
 * *r* - block size parameter
 * *dkLen* - length of derived key
-* *interruptStep* - steps to split calculation with timeouts (default 1000)
-* *callback* - callback function (`function (string)`)
-* *encoding* - (optional) result encoding (`"base64"`, `"hex"`, or `null`).
+* *interruptStep* - (optional) steps to split calculation with timeouts (defaults to 1000)
+* *callback* - callback function (`function (array|string)`)
+* *encoding* - (optional) result encoding (`"base64"`, `"hex"`, or `null`/`undefined`).
+
+When encoding is not set, the result is an `Array` of bytes.
+
+
+Limitation
+----------
+
+Doesn't support parallelization parameter greater than 1.
 
 
 License
