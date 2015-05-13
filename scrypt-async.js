@@ -1,6 +1,6 @@
 /*!
  * Fast "async" scrypt implementation in JavaScript.
- * Copyright (c) 2013-2014 Dmitry Chestnykh | BSD License
+ * Copyright (c) 2013-2015 Dmitry Chestnykh | BSD License
  * https://github.com/dchest/scrypt-async-js
  */
 
@@ -9,19 +9,25 @@
  */
 
 /**
- * scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding)
+ * scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
  *
  * Derives a key from password and salt and calls callback
  * with derived key as the only argument.
  *
+ * Calculations are interrupted with zero setTimeout at the given
+ * interruptSteps to avoid freezing the browser. If interruptStep is not given,
+ * it defaults to 1000. If it's zero, the callback is called immediately after
+ * calculation, avoiding setTimeout.
+ *
  * @param {string|Array.<number>} password Password.
  * @param {string|Array.<number>} salt Salt.
- * @param {number} logN  CPU/memory cost parameter (1 to 31).
- * @param {number} r     Block size parameter.
- * @param {number} dkLen Length of derived key.
- * @param {number} interruptStep Steps to split calculation with timeouts (default 1000).
- * @param {function(string)} callback Callback function.
- * @param {string?} encoding Result encoding ("base64", "hex", or null).
+ * @param {number}  logN  CPU/memory cost parameter (1 to 31).
+ * @param {number}  r     Block size parameter.
+ * @param {number}  dkLen Length of derived key.
+ * @param {number?} interruptStep (optional) Steps to split calculation with timeouts (default 1000).
+ * @param {function(string|Array.<number>)} callback Callback function.
+ * @param {string?} encoding (optional) Result encoding ("base64", "hex", or null).
+ *
  */
 function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
   'use strict';
@@ -66,7 +72,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
           u = w[i-15];
           t2 = ((u>>>7) | (u<<(32-7))) ^ ((u>>>18) | (u<<(32-18))) ^ (u>>>3);
 
-          w[i] = (((t1 + w[i-7]) | 0) + ((t2 + w[i-16]) | 0) | 0);
+          w[i] = (((t1 + w[i-7]) | 0) + ((t2 + w[i-16]) | 0)) | 0;
         }
 
         for (i = 0; i < 64; i++) {
@@ -103,17 +109,22 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
     blocks(m);
 
-    var i, bytesLeft = m.length & 63,
-        bitLen = m.length * 8,
-        numZeros = (bytesLeft < 56) ? 60 : 124,
+    var i, bytesLeft = m.length % 64,
+        bitLenHi = (m.length / 0x20000000) | 0,
+        bitLenLo = m.length << 3,
+        numZeros = (bytesLeft < 56) ? 56 : 120,
         p = m.slice(m.length - bytesLeft, m.length);
 
     p.push(0x80);
     for (i = bytesLeft + 1; i < numZeros; i++) p.push(0);
-    p.push((bitLen>>>24) & 0xff);
-    p.push((bitLen>>>16) & 0xff);
-    p.push((bitLen>>>8)  & 0xff);
-    p.push((bitLen>>>0)  & 0xff);
+    p.push((bitLenHi>>>24) & 0xff);
+    p.push((bitLenHi>>>16) & 0xff);
+    p.push((bitLenHi>>>8)  & 0xff);
+    p.push((bitLenHi>>>0)  & 0xff);
+    p.push((bitLenLo>>>24) & 0xff);
+    p.push((bitLenLo>>>16) & 0xff);
+    p.push((bitLenLo>>>8)  & 0xff);
+    p.push((bitLenLo>>>0)  & 0xff);
 
     blocks(p);
 
@@ -285,7 +296,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
           } else {
               arr.push((c>>12) | 224);
               arr.push(((c>>6) & 63) | 128);
-              arr.push((c & 64) | 128);
+              arr.push((c & 63) | 128);
           }
       }
       return arr;
@@ -328,7 +339,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     }
     if (len % 3 > 0) {
       arr[arr.length-1] = '=';
-      if (len % 3 == 1) arr[arr.length-2] = '=';
+      if (len % 3 === 1) arr[arr.length-2] = '=';
     }
     return arr.join('');
   }
@@ -350,9 +361,9 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     throw new Error('scrypt: parameters are too large');
 
   // Decode strings.
-  if (typeof password == 'string')
+  if (typeof password === 'string')
     password = stringToUTF8Bytes(password);
-  if (typeof salt == 'string')
+  if (typeof salt === 'string')
     salt = stringToUTF8Bytes(salt);
 
   if (typeof Int32Array !== 'undefined') {
@@ -422,23 +433,46 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     })();
   }
 
-  // Note: step argument for interruptedFor must be divisible by
-  // two, since smixStepX work in increments of 2.
-  if (!interruptStep) interruptStep = 1000;
-  
-  smixStart();
-  interruptedFor(0, N, interruptStep*2, smixStep1, function() {
-    interruptedFor(0, N, interruptStep*2, smixStep2, function () {
-      smixFinish();
+  function getResult(enc) {
       var result = PBKDF2_HMAC_SHA256_OneIter(password, B, dkLen);
-      if (encoding == "base64")
-        callback(bytesToBase64(result));
-      else if (encoding == "hex")
-        callback(bytesToHex(result));
+      if (enc === 'base64')
+        return bytesToBase64(result);
+      else if (enc === 'hex')
+        return bytesToHex(result);
       else
-        callback(result);
+        return result;
+  }
+
+  if (typeof interruptStep === 'function') {
+    // Called as: scrypt(...,      callback, [encoding])
+    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
+    encoding = callback;
+    callback = interruptStep;
+    interruptStep = 1000;
+  }
+
+  if (interruptStep <= 0) {
+    //
+    // Blocking async variant, calls callback.
+    //
+    smixStart();
+    smixStep1(0, N);
+    smixStep2(0, N);
+    smixFinish();
+    callback(getResult(encoding));
+
+  } else {
+    //
+    // Async variant with interruptions, calls callback.
+    //
+    smixStart();
+    interruptedFor(0, N, interruptStep*2, smixStep1, function() {
+      interruptedFor(0, N, interruptStep*2, smixStep2, function () {
+        smixFinish();
+        callback(getResult(encoding));
+      });
     });
-  });
+  }
 }
 
 if (typeof module !== 'undefined') module.exports = scrypt;
