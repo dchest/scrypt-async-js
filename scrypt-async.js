@@ -14,10 +14,10 @@
  * Derives a key from password and salt and calls callback
  * with derived key as the only argument.
  *
- * Calculations are interrupted with zero setTimeout at the given
- * interruptSteps to avoid freezing the browser. If interruptStep is not given,
- * it defaults to 1000. If it's zero, the callback is called immediately after
- * calculation, avoiding setTimeout.
+ * Calculations are interrupted with setImmediate (or zero setTimeout) at the
+ * given interruptSteps to avoid freezing the browser. If interruptStep is not
+ * given, it defaults to 1000. If it's zero, the callback is called immediately
+ * after the calculation, avoiding setImmediate.
  *
  * @param {string|Array.<number>} password Password.
  * @param {string|Array.<number>} salt Salt.
@@ -420,16 +420,18 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     }
   }
 
+  var nextTick = (typeof setImmediate !== 'undefined') ? setImmediate : setTimeout;
+
   function interruptedFor(start, end, step, fn, donefn) {
     (function performStep() {
-      setTimeout(function() {
+      nextTick(function() {
         fn(start, start + step < end ? start + step : end);
         start += step;
         if (start < end)
           performStep();
         else
           donefn();
-        }, 0);
+        });
     })();
   }
 

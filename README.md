@@ -30,6 +30,10 @@ You can install it via a package manager:
 or [download source code](https://github.com/dchest/scrypt-async-js/releases).
 
 
+To improve performance with small interruptStep values, use `setImmediate` shim,
+such as <https://github.com/YuzuJS/setImmediate>.
+
+
 Usage
 -----
 
@@ -38,10 +42,10 @@ Usage
 Derives a key from password and salt and calls callback
 with derived key as the only argument.
 
-Calculations are interrupted with zero setTimeout at the given
-interruptSteps to avoid freezing the browser. If interruptStep is not given,
-it defaults to 1000. If it's zero, the callback is called immediately after
-calculation, avoiding setTimeout.
+Calculations are interrupted with setImmediate (or zero setTimeout) at the
+given interruptSteps to avoid freezing the browser. If interruptStep is not
+given, it defaults to 1000. If it's zero, the callback is called immediately
+after the calculation, avoiding setImmediate.
 
 #### Arguments:
 	
