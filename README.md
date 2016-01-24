@@ -2,7 +2,8 @@ scrypt-async
 ============
 
 [![Build Status](https://travis-ci.org/dchest/scrypt-async-js.svg?branch=master)](https://travis-ci.org/dchest/scrypt-async-js)
-[![Coverage Status](https://coveralls.io/repos/dchest/scrypt-async-js/badge.svg)](https://coveralls.io/r/dchest/scrypt-async-js)
+[![Test Coverage](https://codeclimate.com/github/evilaliv3/scrypt-async-js/badges/coverage.svg)](https://codeclimate.com/github/evilaliv3/scrypt-async-js/coverage)
+[![Code Climate](https://codeclimate.com/github/evilaliv3/scrypt-async-js/badges/gpa.svg)](https://codeclimate.com/github/evilaliv3/scrypt-async-js)
 
 [![Saucelabs Test Status](https://saucelabs.com/browser-matrix/dchest.svg?auth=caae471e816fc76f8d9a2c292c5f577e)](https://saucelabs.com/u/dchest)
 
