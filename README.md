@@ -70,4 +70,4 @@ Doesn't support parallelization parameter greater than 1.
 License
 -------
 
-BSD-like, see LICENSE file.
+BSD-like, see LICENSE file or MIT license at your choice.
