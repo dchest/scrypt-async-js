@@ -6,6 +6,9 @@ env:
   global:
     - secure: VcbU15zJn1haBDK2w1FbEGhRLsDbwJ52p2Kd2cLWEpXwUAzAAwFDYzxQSD6aDUEnM25RvM78kCDv2yxKONhTXDMR5qgNGLUYnu3fG+TWhuNLVWVDzJO0Y4y0m7C1ONl0G7ILEfxMKhroptuKiha0yRExK2JZKos/j32hSdoke0A=
     - secure: YD3KPer1EjaI2E1b11RFKhJGMc4FQtdzANFh0JyurcfOhahCuPBlS/lqEU+POlcb7qHsNKkHUkcJVXgBK7ncBxqxCqfiTAYMoxZCC62kB9+ZCeV73zFyhm+1p6y0Dnv9uh1b06z0/YzVEHt1NmVafm40U+2cBRERyViwDQLMidM=
+cache:
+  directories:
+    - node_modules
 before_script:
   - npm install -g grunt-cli
 script:
