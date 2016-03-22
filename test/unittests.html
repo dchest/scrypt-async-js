@@ -7,14 +7,12 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="lib/chai.js"></script>
     <script src="lib/mocha.js"></script>
+    <script src="lib/unittests-bundle.js"></script>
     <script>
         mocha.setup('bdd');
         mocha.timeout(20000);
-    </script>
-    <script src="lib/unittests-bundle.js"></script>
-    <script>
+
         if (window.mochaPhantomJS) {
           mochaPhantomJS.run();
         } else {
@@ -27,9 +25,7 @@
             window.mochaResults.reports = failedTests;
           });
 
-          runner.on('fail', logFailure);
-
-          function logFailure(test, err) {
+          runner.on('fail', function (test, err) {
             var flattenTitles = function(test) {
               var titles = [];
               while (test.parent.title) {
