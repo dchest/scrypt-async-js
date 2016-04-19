@@ -273,6 +273,12 @@ describe('limits test', function() {
     }, Error);
   });
 
+  it('should throw when r = 0', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, v.logN, 0, v.dkLen);
+    }, Error);
+  });
+
 });
 
 describe('argument order test', function() {
