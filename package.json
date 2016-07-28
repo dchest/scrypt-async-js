@@ -8,7 +8,7 @@
     "build": "grunt build"
   },
   "devDependencies": {
-    "coveralls": "2.11.8",
+    "coveralls": "2.11.12",
     "grunt": "0.4.5",
     "grunt-browserify": "5.0.0",
     "grunt-contrib-connect": "1.0.1",
