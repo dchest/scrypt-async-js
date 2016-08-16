@@ -1,5 +1,5 @@
 /*!
- * Fast "async" scrypt implementation in JavaScript.
+ * Fast scrypt implementation in JavaScript, using Promises.
  * Copyright (c) 2013-2015 Dmitry Chestnykh | BSD License
  * https://github.com/dchest/scrypt-async-js
  */
@@ -9,29 +9,23 @@
  */
 
 /**
- * scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
+ * scrypt(password, salt, logN, r, dkLen, [encoding])
  *
- * Derives a key from password and salt and calls callback
+ * Derives a key from password and salt and returns a Promise
  * with derived key as the only argument.
- *
- * Calculations are interrupted with setImmediate (or zero setTimeout) at the
- * given interruptSteps to avoid freezing the browser. If interruptStep is not
- * given, it defaults to 1000. If it's zero, the callback is called immediately
- * after the calculation, avoiding setImmediate.
  *
  * @param {string|Array.<number>} password Password.
  * @param {string|Array.<number>} salt Salt.
  * @param {number}  logN  CPU/memory cost parameter (1 to 31).
  * @param {number}  r     Block size parameter.
  * @param {number}  dkLen Length of derived key.
- * @param {number?} interruptStep (optional) Steps to split calculation with timeouts (default 1000).
- * @param {function(string|Array.<number>)} callback Callback function.
  * @param {string?} encoding (optional) Result encoding ("base64", "hex", or null).
  *
  */
-function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
+function scrypt(password, salt, logN, r, dkLen, encoding) {
   'use strict';
 
+  return new Promise(function (callback, reject) {
   function SHA256(m) {
     /** @const */ var K = [
       0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
@@ -351,17 +345,17 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
   var p = 1;
 
   if (r <= 0)
-    throw new Error('scrypt: invalid r');
+    return reject('scrypt: invalid r');
 
   if (logN < 1 || logN > 31)
-    throw new Error('scrypt: logN not be between 1 and 31');
+    return reject('scrypt: logN not be between 1 and 31');
 
   var MAX_INT = (1<<31)>>>0,
       N = (1<<logN)>>>0,
       XY, V, B, tmp;
 
   if (r*p >= 1<<30 || r > MAX_INT/128/p || r > MAX_INT/256 || N > MAX_INT/128/r)
-    throw new Error('scrypt: parameters are too large');
+    return reject('scrypt: parameters are too large');
 
   // Decode strings.
   if (typeof password === 'string')
@@ -423,21 +417,6 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     }
   }
 
-  var nextTick = (typeof setImmediate !== 'undefined') ? setImmediate : setTimeout;
-
-  function interruptedFor(start, end, step, fn, donefn) {
-    (function performStep() {
-      nextTick(function() {
-        fn(start, start + step < end ? start + step : end);
-        start += step;
-        if (start < end)
-          performStep();
-        else
-          donefn();
-        });
-    })();
-  }
-
   function getResult(enc) {
       var result = PBKDF2_HMAC_SHA256_OneIter(password, B, dkLen);
       if (enc === 'base64')
@@ -448,36 +427,12 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         return result;
   }
 
-  if (typeof interruptStep === 'function') {
-    // Called as: scrypt(...,      callback, [encoding])
-    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
-    encoding = callback;
-    callback = interruptStep;
-    interruptStep = 1000;
-  }
-
-  if (interruptStep <= 0) {
-    //
-    // Blocking async variant, calls callback.
-    //
     smixStart();
     smixStep1(0, N);
     smixStep2(0, N);
     smixFinish();
-    callback(getResult(encoding));
-
-  } else {
-    //
-    // Async variant with interruptions, calls callback.
-    //
-    smixStart();
-    interruptedFor(0, N, interruptStep*2, smixStep1, function() {
-      interruptedFor(0, N, interruptStep*2, smixStep2, function () {
-        smixFinish();
-        callback(getResult(encoding));
-      });
-    });
-  }
+    return callback(getResult(encoding));
+  });
 }
 
 if (typeof module !== 'undefined') module.exports = scrypt;
