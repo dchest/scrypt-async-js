@@ -255,28 +255,32 @@ var shortInput = {
 describe('limits test', function() {
   var v = shortInput;
 
-  it('should throw with too small logN', function() {
-    assert.throws(function() {
-      scrypt(v.password, v.salt, 0, v.r, v.dkLen);
-    }, Error);
+  it('should reject with too small logN', function() {
+    scrypt(v.password, v.salt, 0, v.r, v.dkLen)
+    .catch(function (err) {
+        assert.equal('should reject with too small logN', err);
+    });
   });
 
-  it('should throw with too big logN', function() {
-    assert.throws(function() {
-      scrypt(v.password, v.salt, 32, v.r, v.dkLen);
-    }, Error);
+  it('should reject with too big logN', function() {
+      scrypt(v.password, v.salt, 32, v.r, v.dkLen)
+      .catch(function (err) {
+        assert.equal('should reject with too big logN', err);
+      });
   });
 
-  it('should throw with too large parameters', function() {
-    assert.throws(function() {
-      scrypt(v.password, v.salt, v.logN, 1<<31, v.dkLen);
-    }, Error);
+  it('should reject with too large parameters', function() {
+      scrypt(v.password, v.salt, v.logN, 1<<31, v.dkLen)
+      .catch(function (err) {
+        assert.equal('should reject with too large parameters', err);
+      });
   });
 
-  it('should throw when r = 0', function() {
-    assert.throws(function() {
-      scrypt(v.password, v.salt, v.logN, 0, v.dkLen);
-    }, Error);
+  it('should reject when r = 0', function() {
+      scrypt(v.password, v.salt, v.logN, 0, v.dkLen)
+      .catch(function (err) {
+        assert.equal('should reject when r = 0', err);
+      });
   });
 
 });
@@ -287,101 +291,67 @@ describe('argument order test', function() {
   var v = shortInput;
 
   it('all arguments', function(done) {
-    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, "hex")
+    .then(function (out) {
       assert.equal(v.hexResult, out);
       done();
-    }, "hex");
-  });
-
-  it('all arguments, zero interruptStep', function(done) {
-    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 0, function(out) {
-      assert.equal(v.hexResult, out);
-      done();
-    }, "hex");
+    });
   });
 
   it('drop encoding', function(done) {
-    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, 1000, function(out) {
+    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen)
+    .then(function (out) {
       assert.deepEqual(v.result, out);
       done();
     });
   });
 
-  it('drop interruptStep, keep encoding', function(done) {
-    scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, function(out) {
-      assert.equal(v.hexResult, out);
-      done();
-    }, 'hex');
-  });
-
 });
 
-function async_test(i, interruptStep, done) {
+function async_test(i, done) {
   var v = inputs[i];
-  scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, interruptStep, function(out) {
+  scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, v.encoding)
+  .then(function(out) {
     assert.deepEqual(v.result, out);
     done();
-  }, v.encoding);
+  });
 }
 
 describe('async input/output test', function() {
   this.timeout(100000);
 
-  var step = 1000;
-
   it('input 0', function(done) {
-    async_test(0, step, done);
+    async_test(0, done);
   });
   it('input 1', function(done) {
-    async_test(1, step, done);
+    async_test(1, done);
   });
   it('input 2', function(done) {
-    async_test(2, step, done);
+    async_test(2, done);
   });
   it('input 3', function(done) {
-    async_test(3, step, done);
+    async_test(3, done);
   });
   it('input 4', function(done) {
-    async_test(4, step, done);
+    async_test(4, done);
   });
   it('input 5', function(done) {
-    async_test(5, step, done);
+    async_test(5, done);
   });
   it('input 6', function(done) {
-    async_test(6, step, done);
+    async_test(6, done);
   });
   it('input 7', function(done) {
-    async_test(7, step, done);
+    async_test(7, done);
   });
   it('input 8', function(done) {
-    async_test(8, step, done);
+    async_test(8, done);
   });
   it('input 9', function(done) {
-    async_test(9, step, done);
+    async_test(9, done);
   });
   it('input 10', function(done) {
-    async_test(10, step, done);
-  });
-
-});
-
-describe('async input/output test with zero interruptStep', function() {
-  this.timeout(100000);
-
-  // Only shorter tests:
-  var step = 0;
-
-  it('input 0', function(done) {
-    async_test(0, step, done);
-  });
-  it('input 1', function(done) {
-    async_test(1, step, done);
-  });
-  it('input 2', function(done) {
-    async_test(2, step, done);
-  });
-  it('input 3', function(done) {
-    async_test(3, step, done);
+    async_test(10, done);
   });
 
 });
