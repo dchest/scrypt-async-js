@@ -294,6 +294,24 @@ describe('limits test', function() {
     }, Error);
   });
 
+  it('should throw with too big N', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { N: ((-1)>>>0) + 1, r: v.r, dkLen: v.dkLen });
+    }, Error);
+  });
+
+  it('should throw with too small N', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { N: 1, r: v.r, dkLen: v.dkLen });
+    }, Error);
+  });
+
+  it('should throw when N is not power of two', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { N: 123, r: v.r, dkLen: v.dkLen });
+    }, Error);
+  });
+
   it('should throw with too large parameters', function() {
     assert.throws(function() {
       scrypt(v.password, v.salt, v.logN, 1<<31, v.dkLen);
@@ -303,6 +321,12 @@ describe('limits test', function() {
   it('should throw when r = 0', function() {
     assert.throws(function() {
       scrypt(v.password, v.salt, v.logN, 0, v.dkLen);
+    }, Error);
+  });
+
+  it('should throw when p = 0', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { logN: v.logN, r: v.r, p: 0, dkLen: v.dkLen});
     }, Error);
   });
 
@@ -340,6 +364,25 @@ describe('argument order test', function() {
       done();
     }, 'hex');
   });
+
+});
+
+describe('options test', function() {
+  var v = shortInput;
+
+  it('should throw when given too many arguments', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { logN: v.logN, r: 1, dkLen: v.dkLen }, 666, function(){});
+    }, Error);
+  });
+
+  it('should throw when there is no N or logN', function() {
+    assert.throws(function() {
+      scrypt(v.password, v.salt, { r: 1, dkLen: v.dkLen });
+    }, Error);
+  });
+
+
 
 });
 

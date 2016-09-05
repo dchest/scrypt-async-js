@@ -377,7 +377,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         if (opts.N < 2 || opts.N > MAX_UINT)
           throw new Error('scrypt: N is out of range');
 
-        if (opts.N & (opts.N - 1) !== 0)
+        if ((opts.N & (opts.N - 1)) !== 0)
           throw new Error('scrypt: N is not a power of 2');
 
         logN = Math.log(opts.N) / Math.LN2;
