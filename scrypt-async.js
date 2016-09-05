@@ -364,7 +364,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   if (typeof logN === "object") {
     // Called as: scrypt(password, salt, opts, callback)
-    if (arguments.count > 4) {
+    if (arguments.length > 4) {
       throw new Error('scrypt: incorrect number of arguments');
     }
 
