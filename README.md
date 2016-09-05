@@ -52,7 +52,7 @@ after the calculation, avoiding setImmediate.
 * *password* — password (`string` or `Array` of bytes or `Uint8Array`)
 * *salt* — salt (`string` or `Array` of bytes or `Uint8Array`)
 * *options* — object with key derivation options
-* *callback* — callback function receiving result (`function (Array|string)`)
+* *callback* — callback function receiving result (`function (Array|Uint8Array|string)`)
 
 ##### Options:
 
@@ -62,7 +62,7 @@ after the calculation, avoiding setImmediate.
 * `p` — parallelization parameter (default is 1)
 * `dkLen` — derived key length (default is 32)
 * `interruptStep` — (optional) steps to split calculation with timeouts (defaults to 1000)
-* `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), or undefined (result will be an `Array` of bytes).
+* `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), `'binary'` (result will be a `Uint8Array`) or undefined (result will be an `Array` of bytes).
 
 #### Example:
 
@@ -86,14 +86,14 @@ Legacy API doesn't support parallelization parameter greater than 1.
 
 ##### Arguments:
 
-* *password* — password (string or array of bytes)
-* *salt* — salt (string or array of bytes)
+* *password* — password (`string` or `Array` of bytes or `Uint8Array`)
+* *salt* — salt (`string` or `Array` of bytes or `Uint8Array`)
 * *logN* — CPU/memory cost parameter (1 to 31)
 * *r* — block size parameter
 * *dkLen* — length of derived key
 * *interruptStep* — (optional) steps to split calculation with timeouts (defaults to 1000)
-* *callback* — callback function receiving result (`function (Array|string)`)
-* *encoding* — (optional) result encoding (`'base64'`, `'hex'`, or undefined).
+* *callback* — callback function receiving result (`function (Array|Uint8Array|string)`)
+* *encoding* — (optional) result encoding (`'base64'`, `'hex'`, `'binary'` or undefined).
 
 When encoding is not set, the result is an `Array` of bytes.
 

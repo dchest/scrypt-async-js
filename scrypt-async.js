@@ -21,6 +21,7 @@
  *    encoding: // optional encoding:
  *                    "base64" - standard Base64 encoding
  *                    "hex" — hex encoding,
+ *                    "binary" — Uint8Array,
  *                    undefined/null - Array of bytes
  *    interruptStep: // optional, steps to split calculations (default is 0)
  * }
@@ -29,13 +30,15 @@
  * with derived key as the only argument.
  *
  * Calculations are interrupted with setImmediate (or zero setTimeout) at the
- * given interruptSteps to avoid freezing the browser. If interruptStep is not
- * given, it defaults to 1000. If it's zero, the callback is called immediately
- * after the calculation, avoiding setImmediate.
+ * given interruptSteps to avoid freezing the browser. If it's undefined or zero,
+ * the callback is called immediately after the calculation, avoiding setImmediate.
  *
  * Legacy way (only supports p = 1) to call this function is:
  *
  * scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
+ *
+ * In legacy API, if interruptStep is not given, it defaults to 1000.
+ * Pass 0 to have callback called immediately.
  *
  */
 function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
@@ -486,6 +489,8 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         return bytesToBase64(result);
       else if (enc === 'hex')
         return bytesToHex(result);
+      else if (enc === 'binary')
+        return new Uint8Array(result);
       else
         return result;
   }

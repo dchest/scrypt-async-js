@@ -343,6 +343,40 @@ describe('argument order test', function() {
 
 });
 
+describe('encoding test', function() {
+  this.timeout(100000);
+
+  var v = shortInput;
+
+  it('should return string for "hex"', function(done) {
+    scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen, encoding: 'hex' }, function(out) {
+      assert.ok(typeof out === 'string');
+      done();
+    });
+  });
+
+  it('should return string for "base64"', function(done) {
+    scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen, encoding: 'hex' }, function(out) {
+      assert.ok(typeof out === 'string');
+      done();
+    });
+  });
+
+  it('should return Uint8Array for "binary"', function(done) {
+    scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen, encoding: 'binary' }, function(out) {
+      assert.ok(out instanceof Uint8Array);
+      done();
+    });
+  });
+
+  it('should return Array for undefined', function(done) {
+    scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen }, function(out) {
+      assert.ok(Array.isArray(out));
+      done();
+    });
+  });
+});
+
 function async_test(i, interruptStep, done) {
   var v = inputs[i];
   scrypt(v.password, v.salt, v.logN, v.r, v.dkLen, interruptStep, function(out) {
