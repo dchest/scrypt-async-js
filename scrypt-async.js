@@ -374,7 +374,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     logN = opts.logN;
     if (typeof logN === 'undefined') {
       if (typeof opts.N !== 'undefined') {
-        if (opts.N < 0 || opts.N > MAX_UINT)
+        if (opts.N < 2 || opts.N > MAX_UINT)
           throw new Error('scrypt: N is out of range');
 
         if (opts.N & (opts.N - 1) !== 0)
