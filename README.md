@@ -4,8 +4,6 @@ scrypt-async
 [![Build Status](https://travis-ci.org/dchest/scrypt-async-js.svg?branch=master)](https://travis-ci.org/dchest/scrypt-async-js)
 [![Coverage Status](https://coveralls.io/repos/dchest/scrypt-async-js/badge.svg)](https://coveralls.io/r/dchest/scrypt-async-js)
 
-[![Saucelabs Test Status](https://saucelabs.com/browser-matrix/dchest.svg?auth=caae471e816fc76f8d9a2c292c5f577e)](https://saucelabs.com/u/dchest)
-
 Fast "async" scrypt implementation in JavaScript.
 
 Works in browsers without throwing out "kill slow script" warnings due to
@@ -48,7 +46,7 @@ given, it defaults to 1000. If it's zero, the callback is called immediately
 after the calculation, avoiding setImmediate.
 
 #### Arguments:
-	
+
 * *password* - password (string or array of bytes)
 * *salt* - salt (string or array of bytes)
 * *logN* - CPU/memory cost parameter (1 to 31)
