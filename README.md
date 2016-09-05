@@ -35,7 +35,9 @@ such as <https://github.com/YuzuJS/setImmediate>.
 Usage
 -----
 
-### scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
+### Modern API
+
+#### scrypt(password, salt, options, callback)
 
 Derives a key from password and salt and calls callback
 with derived key as the only argument.
@@ -47,22 +49,53 @@ after the calculation, avoiding setImmediate.
 
 #### Arguments:
 
-* *password* - password (string or array of bytes)
-* *salt* - salt (string or array of bytes)
-* *logN* - CPU/memory cost parameter (1 to 31)
-* *r* - block size parameter
-* *dkLen* - length of derived key
-* *interruptStep* - (optional) steps to split calculation with timeouts (defaults to 1000)
-* *callback* - callback function (`function (array|string)`)
-* *encoding* - (optional) result encoding (`"base64"`, `"hex"`, or `null`/`undefined`).
+* *password* — password (`string` or `Array` of bytes or `Uint8Array`)
+* *salt* — salt (`string` or `Array` of bytes or `Uint8Array`)
+* *options* — object with key derivation options
+* *callback* — callback function receiving result (`function (Array|string)`)
+
+##### Options:
+
+* `N` — CPU/memory cost parameter (must be power of two;
+  alternatively, you can specify `logN` where *N = 2^logN*).
+* `r` — block size parameter
+* `p` — parallelization parameter (default is 1)
+* `dkLen` — derived key length (default is 32)
+* `interruptStep` — (optional) steps to split calculation with timeouts (defaults to 1000)
+* `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), or undefined (result will be an `Array` of bytes).
+
+#### Example:
+
+```javascript
+scrypt('mypassword', 'saltysalt', {
+    N: 16384,
+    r: 8,
+    p: 1,
+    dkLen: 16,
+    encoding: 'hex'
+}, function(derivedKey) {
+    console.log(derivedKey); // "5012b74fca8ec8a4a0a62ffdeeee959d"
+});
+```
+
+### Legacy API (deprecated)
+
+#### scrypt(password, salt, logN, r, dkLen, [interruptStep], callback, [encoding])
+
+Legacy API doesn't support parallelization parameter greater than 1.
+
+##### Arguments:
+
+* *password* — password (string or array of bytes)
+* *salt* — salt (string or array of bytes)
+* *logN* — CPU/memory cost parameter (1 to 31)
+* *r* — block size parameter
+* *dkLen* — length of derived key
+* *interruptStep* — (optional) steps to split calculation with timeouts (defaults to 1000)
+* *callback* — callback function receiving result (`function (Array|string)`)
+* *encoding* — (optional) result encoding (`'base64'`, `'hex'`, or undefined).
 
 When encoding is not set, the result is an `Array` of bytes.
-
-
-Limitation
-----------
-
-Doesn't support parallelization parameter greater than 1.
 
 
 License

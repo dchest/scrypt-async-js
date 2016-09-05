@@ -252,6 +252,33 @@ var shortInput = {
   result: [109, 27, 184, 120, 238, 233, 206, 74, 123, 119, 215, 164, 65, 3, 87, 77]
 };
 
+var inputsWithP = [
+  {
+    password: 'password',
+    salt: 'salt',
+    N: 2,
+    r: 10,
+    p: 10,
+    result: [0x48, 0x2c, 0x85, 0x8e, 0x22, 0x90, 0x55, 0xe6, 0x2f,
+        0x41, 0xe0, 0xec, 0x81, 0x9a, 0x5e, 0xe1, 0x8b, 0xdb,
+        0x87, 0x25, 0x1a, 0x53, 0x4f, 0x75, 0xac, 0xd9, 0x5a,
+        0xc5, 0xe5, 0xa, 0xa1, 0x5f]
+  },
+  {
+    password:	"password",
+    salt: "salt",
+		N: 16,
+    r: 100,
+    p: 100,
+		result: [
+			0x88, 0xbd, 0x5e, 0xdb, 0x52, 0xd1, 0xdd, 0x0, 0x18,
+			0x87, 0x72, 0xad, 0x36, 0x17, 0x12, 0x90, 0x22, 0x4e,
+			0x74, 0x82, 0x95, 0x25, 0xb1, 0x8d, 0x73, 0x23, 0xa5,
+			0x7f, 0x91, 0x96, 0x3c, 0x37,
+    ]
+  }
+];
+
 describe('limits test', function() {
   var v = shortInput;
 
@@ -383,5 +410,51 @@ describe('async input/output test with zero interruptStep', function() {
   it('input 3', function(done) {
     async_test(3, step, done);
   });
+
+});
+
+function async_test_opts(i, interruptStep, done) {
+  var v = inputsWithP[i];
+  scrypt(v.password, v.salt, {
+      N: v.N,
+      r: v.r,
+      p: v.p,
+      dkLen: v.result.length,
+      interruptStep: interruptStep,
+      encoding: v.encoding
+  }, function(out) {
+    assert.deepEqual(v.result, out);
+    done();
+  });
+}
+
+
+describe('async input/output test with options and p with zero interruptStep', function() {
+  this.timeout(100000);
+
+  var step = 0;
+
+  it('input 0', function(done) {
+    async_test_opts(0, step, done);
+  });
+  //// Takes too long
+  // it('input 1', function(done) {
+  //   async_test_opts(1, step, done);
+  // });
+
+});
+
+describe('async input/output test with options and p', function() {
+  this.timeout(100000);
+
+  var step = 1000;
+
+  it('input 0', function(done) {
+    async_test_opts(0, step, done);
+  });
+  //// Takes too long
+  // it('input 1', function(done) {
+  //   async_test_opts(1, step, done);
+  // });
 
 });
