@@ -4,6 +4,8 @@ scrypt-async
 [![Build Status](https://travis-ci.org/dchest/scrypt-async-js.svg?branch=master)](https://travis-ci.org/dchest/scrypt-async-js)
 [![Coverage Status](https://coveralls.io/repos/dchest/scrypt-async-js/badge.svg)](https://coveralls.io/r/dchest/scrypt-async-js)
 
+[![Saucelabs Test Status](https://saucelabs.com/browser-matrix/scrypt.svg)](https://saucelabs.com/u/scrypt)
+
 Fast "async" scrypt implementation in JavaScript.
 
 Works in browsers without throwing out "kill slow script" warnings due to
