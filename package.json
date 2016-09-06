@@ -15,7 +15,7 @@
     "grunt-contrib-copy": "1.0.0",
     "grunt-contrib-uglify": "2.0.0",
     "grunt-mocha-istanbul": "5.0.2",
-    "grunt-saucelabs": "8.6.3",
+    "grunt-saucelabs": "9.0.0",
     "istanbul": "0.4.5",
     "mocha": "3.0.2"
   },
