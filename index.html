@@ -11,7 +11,15 @@
     }
 
     #out {
-      padding: 10px 0;
+      margin-top: 10px;
+      padding: 10px 5px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    #out small {
+      padding: 5px;
+      background-color: #eee;
     }
 
     #N {
@@ -24,15 +32,42 @@
 <body>
   <h1><a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> demo</h1>
   <form onsubmit="calculate(); return false">
-    <p>Password: <input name="password" type="text" value="password" size="32"></p>
-    <p>Salt: <input name="salt" type="text" value="salt" size="32"></p>
-    <p>interruptStep: <input name="interruptStep" type="text" value="0" size="8"></p>
-    <p>logN: <input name="logN" type="text" value="11" size="4" onkeypress="updateN()"
-         onchange="updateN()" onkeyup="updateN()"
-         onblur="updateN()"><span id="N"></p>
-<p>r: <input name="r" type="text" value="8" size="4"></p>
-<p>p: <input name="p" type="text" value="1" size="4"></p>
-<input type="submit" name="btn" value="Calculate" />
+    <p>
+      <label for="password">Password:</label>
+      <input id="password" name="password" type="text" value="password" size="32">
+    </p>
+    <p>
+      <label for="salt">Salt:</label>
+      <input id="salt" name="salt" type="text" value="salt" size="32">
+    </p>
+    <p>
+      <label for="interruptStep">interruptStep:</label>
+      <input id="interruptStep" name="interruptStep" type="text" value="0" size="8">
+    </p>
+    <p>
+      <label for="logN">logN:</label>
+      <input id="logN" name="logN" type="text" value="11" size="4"
+         onkeypress="updateN()" onkeyup="updateN()"
+         onblur="updateN()" onchange="updateN()" >
+      <span id="N">
+    </p>
+    <p>
+      <label for="r">r:</label>
+      <input id="r" name="r" type="text" value="8" size="4">
+    </p>
+    <p>
+      <label for="p">p:</label>
+      <input id="p" name="p" type="text" value="1" size="4">
+    </p>
+    <p>
+      <label for="encoding">Encoding:</label>
+      <select id="encoding" name="encoding">
+        <option value="hex" selected>hex</option>
+        <option value="base64">base64</option>
+        <option value="binary">binary</option>
+      </select>
+    </p>
+    <input type="submit" name="btn" value="Calculate" />
 </form>
 <div id="out"></div>
 
@@ -57,6 +92,7 @@ function calculate() {
   var logN = f.logN.value;
   var r = f.r.value;
   var p = f.p.value;
+  var encoding = f.encoding.value;
 
   btn.disabled = true;
   btn.value = 'Wait...';
@@ -70,11 +106,11 @@ function calculate() {
           p: p,
           dkLen: 32,
           interruptStep: interruptStep,
-          encoding: 'hex'
+          encoding: encoding
       },
       function(res) {
         var t2 = ((new Date()).getTime()-t1);
-        out.innerHTML = 'scrypt: <b>'+t2+' ms</b> ' + res + '';
+        out.innerHTML = 'Time: <b>'+t2+' ms</b><br>Result: <small>' + res + '</small>';
         btn.disabled = false;
         btn.value = 'Calculate';
       });
