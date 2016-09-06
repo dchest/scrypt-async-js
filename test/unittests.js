@@ -405,12 +405,14 @@ describe('encoding test', function() {
     });
   });
 
-  it('should return Uint8Array for "binary"', function(done) {
-    scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen, encoding: 'binary' }, function(out) {
-      assert.ok(out instanceof Uint8Array);
-      done();
+  if (typeof Uint8Array !== 'undefined') {
+    it('should return Uint8Array for "binary"', function(done) {
+      scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen, encoding: 'binary' }, function(out) {
+        assert.ok(out instanceof Uint8Array);
+        done();
+      });
     });
-  });
+  }
 
   it('should return Array for undefined', function(done) {
     scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen }, function(out) {
