@@ -416,7 +416,7 @@ describe('encoding test', function() {
 
   it('should return Array for undefined', function(done) {
     scrypt(v.password, v.salt, { logN: v.logN, r: v.r, dkLen: v.dkLen }, function(out) {
-      assert.ok(Object.prototype.toString.call(out) === "[object Array]");
+      assert.equal(Object.prototype.toString.call(out), "[object Array]");
       done();
     });
   });
