@@ -140,7 +140,10 @@ module.exports = function(grunt) {
     uglify: {
       scrypt: {
         options: {
-          preserveComments: 'some'
+          preserveComments: function(node, comment) {
+            return comment && comment.value && comment.value.length &&
+                   comment.value[0] === "!";
+          }
         },
         files: {
           'scrypt-async.min.js' : [ 'scrypt-async.js' ]
