@@ -8,10 +8,10 @@ scrypt-async
 
 Fast "async" scrypt implementation in JavaScript.
 
-Works in browsers without throwing out "kill slow script" warnings due to
-configurable interruptStep, which yields from calculation.
-
-Should be compatible even with IE. Also works with Node/io.js (but you should really use the C implementation for that).
+Works in browsers without throwing "kill slow script" warnings due to
+configurable interruptStep, which yields from calculation. Compatible even with
+old versions of IE. Also works with Node/io.js (but you should really use the C
+implementation for that).
 
 
 Installation
