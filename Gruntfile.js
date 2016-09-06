@@ -39,7 +39,7 @@ module.exports = function(grunt) {
       all: {
         options: {
           username: process.env.SAUCE_USERNAME,
-          key: process.env.SAUCE_ACCESS_KEY,
+          key: function() { return process.env.SAUCE_ACCESS_KEY; },
           urls: ['http://127.0.0.1:3000/unittests.html'],
           build: process.env.TRAVIS_JOB_ID,
           testname: 'Sauce Unit Test for scrypt-async-js',
