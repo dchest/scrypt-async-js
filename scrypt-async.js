@@ -399,7 +399,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     throw new Error('scrypt: invalid r');
 
   if (logN < 1 || logN > 31)
-    throw new Error('scrypt: logN not be between 1 and 31');
+    throw new Error('scrypt: logN must be between 1 and 31');
 
 
   var N = (1<<logN)>>>0,
