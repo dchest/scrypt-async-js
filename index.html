@@ -81,6 +81,13 @@ function updateN() {
   fN.innerHTML = 'N = ' + Math.pow(2, logN);
 }
 
+var getTime = (function () {
+    if (typeof performance !== "undefined") {
+        return performance.now.bind(performance);
+    }
+    return Date.now.bind(Date);
+})();
+
 function calculate() {
 
   var btn = f.btn;
@@ -99,7 +106,7 @@ function calculate() {
 
   window.setTimeout(function() {
     try {
-      var t1 = (new Date()).getTime();
+      var t1 = getTime();
       scrypt(password, salt, {
           logN: logN,
           r: r,
@@ -109,7 +116,7 @@ function calculate() {
           encoding: encoding
       },
       function(res) {
-        var t2 = ((new Date()).getTime()-t1);
+        var t2 = getTime() - t1;
         out.innerHTML = 'Time: <b>'+t2+' ms</b><br>Result: <small>' + res + '</small>';
         btn.disabled = false;
         btn.value = 'Calculate';
