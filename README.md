@@ -10,7 +10,7 @@ Fast "async" scrypt implementation in JavaScript.
 
 Works in browsers without throwing "kill slow script" warnings due to
 configurable interruptStep, which yields from calculation. Compatible even with
-old versions of IE. Also works with Node/io.js (but you should really use the C
+old versions of IE. Also works with Node.js (but you should really use the C
 implementation for that).
 
 
@@ -19,16 +19,19 @@ Installation
 
 You can install it via a package manager:
 
-[Bower](http://bower.io):
+[Yarn](https://yarnpkg.com/):
 
-    $ bower install scrypt-async
+    $ yarn add scrypt-async
 
 [NPM](https://www.npmjs.org/):
 
     $ npm install scrypt-async
 
-or [download source code](https://github.com/dchest/scrypt-async-js/releases).
+[Bower](http://bower.io):
 
+    $ bower install scrypt-async
+
+or [download source code](https://github.com/dchest/scrypt-async-js/releases).
 
 To improve performance with small interruptStep values, use `setImmediate` shim,
 such as <https://github.com/YuzuJS/setImmediate>.
