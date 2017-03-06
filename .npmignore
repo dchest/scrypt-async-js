@@ -1,3 +1,4 @@
+.vscode
 .travis.yml
 Gruntfile.js
 bower.json
