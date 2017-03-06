@@ -46,7 +46,7 @@ with derived key as the only argument.
 
 If interruptStep is set, calculations are interrupted with setImmediate (or
 zero setTimeout) at the given interruptSteps to avoid freezing the browser.
-If it's not set or if set to zero, the callback is called immediately after the
+If it's not set or set to zero, the callback is called immediately after the
 calculation, avoiding setImmediate.
 
 #### Arguments:
