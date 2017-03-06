@@ -44,10 +44,10 @@ Usage
 Derives a key from password and salt and calls callback
 with derived key as the only argument.
 
-Calculations are interrupted with setImmediate (or zero setTimeout) at the
-given interruptSteps to avoid freezing the browser. If interruptStep is not
-given, it defaults to 1000. If it's zero, the callback is called immediately
-after the calculation, avoiding setImmediate.
+If interruptStep is set, calculations are interrupted with setImmediate (or
+zero setTimeout) at the given interruptSteps to avoid freezing the browser.
+If it's not set or if set to zero, the callback is called immediately after the
+calculation, avoiding setImmediate.
 
 #### Arguments:
 
@@ -63,7 +63,7 @@ after the calculation, avoiding setImmediate.
 * `r` — block size parameter
 * `p` — parallelization parameter (default is 1)
 * `dkLen` — derived key length (default is 32)
-* `interruptStep` — (optional) steps to split calculation with timeouts (defaults to 1000)
+* `interruptStep` — (optional) steps to split calculation with timeouts (defaults to 0)
 * `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), `'binary'` (result will be a `Uint8Array`) or undefined (result will be an `Array` of bytes).
 
 #### Example:
