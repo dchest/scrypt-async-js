@@ -66,7 +66,7 @@ calculation, avoiding setImmediate.
 * `r` — block size parameter
 * `p` — parallelization parameter (default is 1)
 * `dkLen` — derived key length (default is 32)
-* `interruptStep` — (optional) steps to split calculation with timeouts (defaults to 0)
+* `interruptStep` — (optional) the amount of loop cycles to execute before the next setImmediate/setTimeout (defaults to 0)
 * `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), `'binary'` (result will be a `Uint8Array`) or undefined (result will be an `Array` of bytes).
 
 #### Example:
@@ -96,7 +96,7 @@ Legacy API doesn't support parallelization parameter greater than 1.
 * *logN* — CPU/memory cost parameter (1 to 31)
 * *r* — block size parameter
 * *dkLen* — length of derived key
-* *interruptStep* — (optional) steps to split calculation with timeouts (defaults to 1000)
+* *interruptStep* — (optional) the amount of loop cycles to execute before the next setImmediate/setTimeout (defaults to 1000)
 * *callback* — callback function receiving result (`function (Array|Uint8Array|string)`)
 * *encoding* — (optional) result encoding (`'base64'`, `'hex'`, `'binary'` or undefined).
 
