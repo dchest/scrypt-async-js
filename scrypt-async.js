@@ -398,14 +398,21 @@ function scrypt(password, salt, options, callback,
     throw new Error('scrypt: incorrect number of arguments');
   }
 
-  options = scrypt.validateOptions(options);
+  if (options.XY && options.V && options.tmp)
+    options = scrypt.validateOptions(options);
+  else
+    options = scrypt.allocate(options);
+
   var N = options.N;
   var p = options.p;
   var r = options.r;
   var dkLen = options.dkLen;
   var interruptStep = options.interruptStep;
   var encoding = options.encoding;
-  var XY, V, B, tmp;
+  var XY = options.XY;
+  var V = options.V;
+  var tmp = options.tmp;
+  var B;
 
   // Decode strings.
   if (typeof password === 'string')
@@ -413,16 +420,6 @@ function scrypt(password, salt, options, callback,
   if (typeof salt === 'string')
     salt = stringToUTF8Bytes(salt);
 
-  if (typeof Int32Array !== 'undefined') {
-    //XXX We can use Uint32Array, but Int32Array is faster in Safari.
-    XY = new Int32Array(64*r);
-    V = new Int32Array(32*N*r);
-    tmp = new Int32Array(16);
-  } else {
-    XY = [];
-    V = [];
-    tmp = new Array(16);
-  }
   B = PBKDF2_HMAC_SHA256_OneIter(password, salt, p*128*r);
 
   var xi = 0, yi = 32 * r;
@@ -568,6 +565,29 @@ scrypt.validateOptions = function(options)
   if (options.r*options.p >= 1<<30 || options.r > MAX_UINT/128/options.p ||
       options.r > MAX_UINT/256 || options.N > MAX_UINT/128/options.r) {
     throw new Error('scrypt: parameters are too large');
+  }
+
+  return options;
+};
+
+/**
+ * Preallocates the necessary buffers for the given options, returns the new
+ * configuration which can be passed via options parameter to scrypt().
+ */
+scrypt.allocate = function(options)
+{
+  options = scrypt.validateOptions(options);
+  var XY, V, tmp;
+
+  if (typeof Int32Array !== 'undefined') {
+    //XXX We can use Uint32Array, but Int32Array is faster in Safari.
+    options.XY = new Int32Array(64*options.r);
+    options.V = new Int32Array(32*options.N*options.r);
+    options.tmp = new Int32Array(16);
+  } else {
+    options.XY = [];
+    options.V = [];
+    options.tmp = new Array(16);
   }
 
   return options;
