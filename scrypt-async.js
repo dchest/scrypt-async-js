@@ -41,7 +41,9 @@
  * Pass 0 to have callback called immediately.
  *
  */
-function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
+function scrypt(password, salt, options, callback,
+                legacyDkLen, legacyInterruptStep,
+                legacyCallback, legacyEncoding) {
   'use strict';
 
   function SHA256(m) {
@@ -359,38 +361,50 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   // Generate key.
 
-  var MAX_UINT = (-1)>>>0,
-      p = 1;
-
-  if (typeof logN === "object") {
-    // Called as: scrypt(password, salt, opts, callback)
-    if (arguments.length > 4) {
-      throw new Error('scrypt: incorrect number of arguments');
+  if (typeof options == 'number') {
+    // Called with positional parameters, convert to current calling convention
+    if (typeof legacyInterruptStep === 'function') {
+      // Called as: scrypt(...,      callback, [encoding])
+      //  shifting: scrypt(..., interruptStep,  callback, [encoding])
+      legacyEncoding = legacyCallback;
+      legacyCallback = legacyInterruptStep;
+      legacyInterruptStep = 1000;
     }
 
-    var opts = logN;
-
-    callback = r;
-    logN = opts.logN;
-    if (typeof logN === 'undefined') {
-      if (typeof opts.N !== 'undefined') {
-        if (opts.N < 2 || opts.N > MAX_UINT)
-          throw new Error('scrypt: N is out of range');
-
-        if ((opts.N & (opts.N - 1)) !== 0)
-          throw new Error('scrypt: N is not a power of 2');
-
-        logN = Math.log(opts.N) / Math.LN2;
-      } else {
-        throw new Error('scrypt: missing N parameter');
-      }
-    }
-    p = opts.p || 1;
-    r = opts.r;
-    dkLen = opts.dkLen || 32;
-    interruptStep = opts.interruptStep || 0;
-    encoding = opts.encoding;
+    return scrypt(password, salt, {
+      logN: options,
+      r: callback,
+      dkLen: legacyDkLen,
+      interruptStep: legacyInterruptStep,
+      encoding: legacyEncoding
+    }, legacyCallback);
   }
+
+  if (arguments.length > 4) {
+    throw new Error('scrypt: incorrect number of arguments');
+  }
+
+  var MAX_UINT = (-1)>>>0;
+
+  var logN = options.logN;
+  if (typeof logN === 'undefined') {
+    if (typeof options.N !== 'undefined') {
+      if (options.N < 2 || options.N > MAX_UINT)
+        throw new Error('scrypt: N is out of range');
+
+      if ((options.N & (options.N - 1)) !== 0)
+        throw new Error('scrypt: N is not a power of 2');
+
+      logN = Math.log(options.N) / Math.LN2;
+    } else {
+      throw new Error('scrypt: missing N parameter');
+    }
+  }
+  var p = options.p || 1;
+  var r = options.r;
+  var dkLen = options.dkLen || 32;
+  var interruptStep = options.interruptStep || 0;
+  var encoding = options.encoding;
 
   if (p < 1)
     throw new Error('scrypt: invalid p');
@@ -519,14 +533,6 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
           }
         });
       });
-  }
-
-  if (typeof interruptStep === 'function') {
-    // Called as: scrypt(...,      callback, [encoding])
-    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
-    encoding = callback;
-    callback = interruptStep;
-    interruptStep = 1000;
   }
 
   if (interruptStep <= 0) {
