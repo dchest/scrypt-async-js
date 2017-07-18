@@ -4,6 +4,20 @@
  * https://github.com/dchest/scrypt-async-js
  */
 
+if (typeof Object.assign != 'function') {
+  Object.assign = function(target) {
+    'use strict';
+
+    for (var i = 1; i < arguments.length; o++) {
+      var source = arguments[i];
+      for (var key in source)
+        if (source.hasOwnProperty(key))
+          target[key] = source[key];
+    }
+    return target;
+  };
+}
+
 /**
  * scrypt(password, salt, options, callback)
  *
@@ -384,43 +398,14 @@ function scrypt(password, salt, options, callback,
     throw new Error('scrypt: incorrect number of arguments');
   }
 
-  var MAX_UINT = (-1)>>>0;
-
-  var logN = options.logN;
-  if (typeof logN === 'undefined') {
-    if (typeof options.N !== 'undefined') {
-      if (options.N < 2 || options.N > MAX_UINT)
-        throw new Error('scrypt: N is out of range');
-
-      if ((options.N & (options.N - 1)) !== 0)
-        throw new Error('scrypt: N is not a power of 2');
-
-      logN = Math.log(options.N) / Math.LN2;
-    } else {
-      throw new Error('scrypt: missing N parameter');
-    }
-  }
-  var p = options.p || 1;
+  options = scrypt.validateOptions(options);
+  var N = options.N;
+  var p = options.p;
   var r = options.r;
-  var dkLen = options.dkLen || 32;
-  var interruptStep = options.interruptStep || 0;
+  var dkLen = options.dkLen;
+  var interruptStep = options.interruptStep;
   var encoding = options.encoding;
-
-  if (p < 1)
-    throw new Error('scrypt: invalid p');
-
-  if (r <= 0)
-    throw new Error('scrypt: invalid r');
-
-  if (logN < 1 || logN > 31)
-    throw new Error('scrypt: logN must be between 1 and 31');
-
-
-  var N = (1<<logN)>>>0,
-      XY, V, B, tmp;
-
-  if (r*p >= 1<<30 || r > MAX_UINT/128/p || r > MAX_UINT/256 || N > MAX_UINT/128/r)
-    throw new Error('scrypt: parameters are too large');
+  var XY, V, B, tmp;
 
   // Decode strings.
   if (typeof password === 'string')
@@ -541,5 +526,51 @@ function scrypt(password, salt, options, callback,
     calculateAsync(0);
   }
 }
+
+/**
+ * Validates scrypt options and returns modified options with missing keys
+ * added.
+ */
+scrypt.validateOptions = function(options)
+{
+  'use strict';
+  options = Object.assign({}, options);
+
+  var MAX_UINT = (-1)>>>0;
+  if (typeof options.logN === 'undefined') {
+    if (typeof options.N !== 'undefined') {
+      if (options.N < 2 || options.N > MAX_UINT)
+        throw new Error('scrypt: N is out of range');
+
+      if ((options.N & (options.N - 1)) !== 0)
+        throw new Error('scrypt: N is not a power of 2');
+
+      options.logN = Math.log(options.N) / Math.LN2;
+    } else {
+      throw new Error('scrypt: missing N parameter');
+    }
+  }
+  options.p = options.p || 1;
+  options.dkLen = options.dkLen || 32;
+  options.interruptStep = options.interruptStep || 0;
+
+  if (options.p < 1)
+    throw new Error('scrypt: invalid p');
+
+  if (options.r <= 0)
+    throw new Error('scrypt: invalid r');
+
+  if (options.logN < 1 || options.logN > 31)
+    throw new Error('scrypt: logN must be between 1 and 31');
+
+  options.N = (1<<options.logN)>>>0;
+
+  if (options.r*options.p >= 1<<30 || options.r > MAX_UINT/128/options.p ||
+      options.r > MAX_UINT/256 || options.N > MAX_UINT/128/options.r) {
+    throw new Error('scrypt: parameters are too large');
+  }
+
+  return options;
+};
 
 if (typeof module !== 'undefined') module.exports = scrypt;
