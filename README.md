@@ -67,7 +67,7 @@ calculation, avoiding setImmediate.
 * `p` — parallelization parameter (default is 1)
 * `dkLen` — derived key length (default is 32)
 * `interruptStep` — (optional) the amount of loop cycles to execute before the next setImmediate/setTimeout (defaults to 0)
-* `encoding` — (optional) result encoding `'base64'` or `'hex'` (result with be a `string`), `'binary'` (result will be a `Uint8Array`) or undefined (result will be an `Array` of bytes).
+* `encoding` — (optional) result encoding `'base64'` or `'hex'` (result will be a `string`), `'binary'` (result will be a `Uint8Array`) or undefined (result will be an `Array` of bytes).
 
 #### Example:
 
