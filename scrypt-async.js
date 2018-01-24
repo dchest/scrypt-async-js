@@ -297,21 +297,34 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
   }
 
   function stringToUTF8Bytes(s) {
-      var arr = [];
-      for (var i = 0; i < s.length; i++) {
-          var c = s.charCodeAt(i);
-          if (c < 128) {
-              arr.push(c);
-          } else if (c > 127 && c < 2048) {
-              arr.push((c>>6) | 192);
-              arr.push((c & 63) | 128);
-          } else {
-              arr.push((c>>12) | 224);
-              arr.push(((c>>6) & 63) | 128);
-              arr.push((c & 63) | 128);
-          }
+    var arr = [];
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c < 0x80) {
+        arr.push(c);
+      } else if (c < 0x800) {
+        arr.push(0xc0 | c >> 6);
+        arr.push(0x80 | c & 0x3f);
+      } else if (c < 0xd800) {
+        arr.push(0xe0 | c >> 12);
+        arr.push(0x80 | (c >> 6) & 0x3f);
+        arr.push(0x80 | c & 0x3f);
+      } else {
+        if (i >= s.length - 1) {
+          throw new Error('invalid string');
+        }
+        i++; // get one more character
+        c = (c & 0x3ff) << 10;
+        c |= s.charCodeAt(i) & 0x3ff;
+        c += 0x10000;
+
+        arr.push(0xf0 | c >> 18);
+        arr.push(0x80 | (c >> 12) & 0x3f);
+        arr.push(0x80 | (c >> 6) & 0x3f);
+        arr.push(0x80 | c & 0x3f);
       }
-      return arr;
+    }
+    return arr;
   }
 
   function bytesToHex(p) {

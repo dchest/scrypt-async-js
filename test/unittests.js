@@ -57,6 +57,15 @@ var inputs = [
     result: 'FYjFuH0fb+qfG0Q0n5WFVQ=='
   },
   {
+    password: '☺☻☹ abc 𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡',
+    salt: [1, 2, 3],
+    logN: 10,
+    r: 8,
+    dkLen: 10,
+    encoding: 'hex',
+    result: 'd64f593e6c4e7a39913d'
+  },
+  {
     password: [104, 101, 108, 108, 111], // "hello"
     salt: [208, 188, 208, 184, 209, 128], // "мир"
     logN: 4,
