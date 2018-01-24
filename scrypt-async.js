@@ -4,6 +4,20 @@
  * https://github.com/dchest/scrypt-async-js
  */
 
+if (typeof Object.assign != 'function') {
+  Object.assign = function(target) {
+    'use strict';
+
+    for (var i = 1; i < arguments.length; o++) {
+      var source = arguments[i];
+      for (var key in source)
+        if (source.hasOwnProperty(key))
+          target[key] = source[key];
+    }
+    return target;
+  };
+}
+
 /**
  * scrypt(password, salt, options, callback)
  *
@@ -41,7 +55,9 @@
  * Pass 0 to have callback called immediately.
  *
  */
-function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
+function scrypt(password, salt, options, callback,
+                legacyDkLen, legacyInterruptStep,
+                legacyCallback, legacyEncoding) {
   'use strict';
 
   function SHA256(m) {
@@ -372,54 +388,44 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   // Generate key.
 
-  var MAX_UINT = (-1)>>>0,
-      p = 1;
-
-  if (typeof logN === "object") {
-    // Called as: scrypt(password, salt, opts, callback)
-    if (arguments.length > 4) {
-      throw new Error('scrypt: incorrect number of arguments');
+  if (typeof options == 'number') {
+    // Called with positional parameters, convert to current calling convention
+    if (typeof legacyInterruptStep === 'function') {
+      // Called as: scrypt(...,      callback, [encoding])
+      //  shifting: scrypt(..., interruptStep,  callback, [encoding])
+      legacyEncoding = legacyCallback;
+      legacyCallback = legacyInterruptStep;
+      legacyInterruptStep = 1000;
     }
 
-    var opts = logN;
-
-    callback = r;
-    logN = opts.logN;
-    if (typeof logN === 'undefined') {
-      if (typeof opts.N !== 'undefined') {
-        if (opts.N < 2 || opts.N > MAX_UINT)
-          throw new Error('scrypt: N is out of range');
-
-        if ((opts.N & (opts.N - 1)) !== 0)
-          throw new Error('scrypt: N is not a power of 2');
-
-        logN = Math.log(opts.N) / Math.LN2;
-      } else {
-        throw new Error('scrypt: missing N parameter');
-      }
-    }
-    p = opts.p || 1;
-    r = opts.r;
-    dkLen = opts.dkLen || 32;
-    interruptStep = opts.interruptStep || 0;
-    encoding = opts.encoding;
+    return scrypt(password, salt, {
+      logN: options,
+      r: callback,
+      dkLen: legacyDkLen,
+      interruptStep: legacyInterruptStep,
+      encoding: legacyEncoding
+    }, legacyCallback);
   }
 
-  if (p < 1)
-    throw new Error('scrypt: invalid p');
+  if (arguments.length > 4) {
+    throw new Error('scrypt: incorrect number of arguments');
+  }
 
-  if (r <= 0)
-    throw new Error('scrypt: invalid r');
+  if (options.XY && options.V && options.tmp)
+    options = scrypt.validateOptions(options);
+  else
+    options = scrypt.allocate(options);
 
-  if (logN < 1 || logN > 31)
-    throw new Error('scrypt: logN must be between 1 and 31');
-
-
-  var N = (1<<logN)>>>0,
-      XY, V, B, tmp;
-
-  if (r*p >= 1<<30 || r > MAX_UINT/128/p || r > MAX_UINT/256 || N > MAX_UINT/128/r)
-    throw new Error('scrypt: parameters are too large');
+  var N = options.N;
+  var p = options.p;
+  var r = options.r;
+  var dkLen = options.dkLen;
+  var interruptStep = options.interruptStep;
+  var encoding = options.encoding;
+  var XY = options.XY;
+  var V = options.V;
+  var tmp = options.tmp;
+  var B;
 
   // Decode strings.
   if (typeof password === 'string')
@@ -427,16 +433,6 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
   if (typeof salt === 'string')
     salt = stringToUTF8Bytes(salt);
 
-  if (typeof Int32Array !== 'undefined') {
-    //XXX We can use Uint32Array, but Int32Array is faster in Safari.
-    XY = new Int32Array(64*r);
-    V = new Int32Array(32*N*r);
-    tmp = new Int32Array(16);
-  } else {
-    XY = [];
-    V = [];
-    tmp = new Array(16);
-  }
   B = PBKDF2_HMAC_SHA256_OneIter(password, salt, p*128*r);
 
   var xi = 0, yi = 32 * r;
@@ -534,19 +530,80 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
       });
   }
 
-  if (typeof interruptStep === 'function') {
-    // Called as: scrypt(...,      callback, [encoding])
-    //  shifting: scrypt(..., interruptStep,  callback, [encoding])
-    encoding = callback;
-    callback = interruptStep;
-    interruptStep = 1000;
-  }
-
   if (interruptStep <= 0) {
     calculateSync();
   } else {
     calculateAsync(0);
   }
 }
+
+/**
+ * Validates scrypt options and returns modified options with missing keys
+ * added.
+ */
+scrypt.validateOptions = function(options)
+{
+  'use strict';
+  options = Object.assign({}, options);
+
+  var MAX_UINT = (-1)>>>0;
+  if (typeof options.logN === 'undefined') {
+    if (typeof options.N !== 'undefined') {
+      if (options.N < 2 || options.N > MAX_UINT)
+        throw new Error('scrypt: N is out of range');
+
+      if ((options.N & (options.N - 1)) !== 0)
+        throw new Error('scrypt: N is not a power of 2');
+
+      options.logN = Math.log(options.N) / Math.LN2;
+    } else {
+      throw new Error('scrypt: missing N parameter');
+    }
+  }
+  options.p = options.p || 1;
+  options.dkLen = options.dkLen || 32;
+  options.interruptStep = options.interruptStep || 0;
+
+  if (options.p < 1)
+    throw new Error('scrypt: invalid p');
+
+  if (options.r <= 0)
+    throw new Error('scrypt: invalid r');
+
+  if (options.logN < 1 || options.logN > 31)
+    throw new Error('scrypt: logN must be between 1 and 31');
+
+  options.N = (1<<options.logN)>>>0;
+
+  if (options.r*options.p >= 1<<30 || options.r > MAX_UINT/128/options.p ||
+      options.r > MAX_UINT/256 || options.N > MAX_UINT/128/options.r) {
+    throw new Error('scrypt: parameters are too large');
+  }
+
+  return options;
+};
+
+/**
+ * Preallocates the necessary buffers for the given options, returns the new
+ * configuration which can be passed via options parameter to scrypt().
+ */
+scrypt.allocate = function(options)
+{
+  options = scrypt.validateOptions(options);
+  var XY, V, tmp;
+
+  if (typeof Int32Array !== 'undefined') {
+    //XXX We can use Uint32Array, but Int32Array is faster in Safari.
+    options.XY = new Int32Array(64*options.r);
+    options.V = new Int32Array(32*options.N*options.r);
+    options.tmp = new Int32Array(16);
+  } else {
+    options.XY = [];
+    options.V = [];
+    options.tmp = new Array(16);
+  }
+
+  return options;
+};
 
 if (typeof module !== 'undefined') module.exports = scrypt;
