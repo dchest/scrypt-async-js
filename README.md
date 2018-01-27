@@ -42,7 +42,7 @@ Usage
 
 ### Modern API
 
-#### scrypt(password, salt, options, callback)
+#### scrypt(password, salt, options[, callback])
 
 Derives a key from password and salt and calls callback
 with derived key as the only argument.
@@ -52,12 +52,14 @@ zero setTimeout) at the given interruptSteps to avoid freezing the browser.
 If it's not set or set to zero, the callback is called immediately after the
 calculation, avoiding setImmediate.
 
+If callback is not set, `scrypt` returns a Promise.
+
 #### Arguments:
 
 * *password* — password (`string` or `Array` of bytes or `Uint8Array`)
 * *salt* — salt (`string` or `Array` of bytes or `Uint8Array`)
 * *options* — object with key derivation options
-* *callback* — callback function receiving result (`function (Array|Uint8Array|string)`)
+* *[callback]* — callback function receiving result (`function (Array|Uint8Array|string)`), omit for Promise
 
 ##### Options:
 
