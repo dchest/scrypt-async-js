@@ -41,6 +41,7 @@
  * Pass 0 to have callback called immediately.
  *
  */
+var Promise = require('promise');
 function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encoding) {
   'use strict';
 
@@ -398,7 +399,7 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         throw new Error('scrypt: missing N parameter');
       }
     }
-    p = opts.p || 1;
+    p = opts.p;
     r = opts.r;
     dkLen = opts.dkLen || 32;
     interruptStep = opts.interruptStep || 0;
@@ -542,10 +543,22 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
     interruptStep = 1000;
   }
 
-  if (interruptStep <= 0) {
-    calculateSync();
-  } else {
-    calculateAsync(0);
+  function run() {
+    if (interruptStep <= 0) {
+      calculateSync();
+    } else {
+      calculateAsync(0);
+    }
+  }
+
+  if(!callback){
+    // Promise
+    return new Promise(function(resolve) {
+      callback = resolve;
+      run();
+    })
+  }else {
+  	run();
   }
 }
 

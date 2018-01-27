@@ -516,6 +516,21 @@ function async_test_opts(i, interruptStep, done) {
   });
 }
 
+function async_test_opts_promise(i, interruptStep, done) {
+  var v = inputsWithP[i];
+  scrypt(v.password, v.salt, {
+    N: v.N,
+    r: v.r,
+    p: v.p,
+    dkLen: v.result.length,
+    interruptStep: interruptStep,
+    encoding: v.encoding
+  }).then(function(out) {
+    assert.deepEqual(v.result, out);
+    done();
+  })
+}
+
 
 describe('async input/output test with options and p with zero interruptStep', function() {
   this.timeout(100000);
@@ -545,4 +560,14 @@ describe('async input/output test with options and p', function() {
   //   async_test_opts(1, step, done);
   // });
 
+});
+
+describe('async promise', function() {
+  this.timeout(100000);
+
+  var step = 0;
+
+  it('input 0', function(done) {
+    async_test_opts_promise(0, step, done);
+  });
 });
