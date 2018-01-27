@@ -335,7 +335,7 @@ describe('limits test', function() {
 
   it('should throw when p = 0', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { logN: v.logN, r: v.r, p: 0, dkLen: v.dkLen}, function() {});
+      scrypt(v.password, v.salt, { logN: v.logN, r: v.r, p: 0, dkLen: v.dkLen});
     }, Error);
   });
 
