@@ -485,14 +485,17 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   function interruptedFor(start, end, step, fn, donefn) {
     (function performStep() {
-      nextTick(function() {
+      if (start % step * 10 == 0) {
+        nextTick(function () {
+          fn(start, start + step < end ? start + step : end);
+          start += step;
+          if (start < end) performStep(); else donefn();
+        });
+      } else {
         fn(start, start + step < end ? start + step : end);
         start += step;
-        if (start < end)
-          performStep();
-        else
-          donefn();
-        });
+        if (start < end) performStep(); else donefn();
+      }
     })();
   }
 
