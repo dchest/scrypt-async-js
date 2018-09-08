@@ -154,9 +154,8 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   function PBKDF2_HMAC_SHA256_OneIter(password, salt, dkLen) {
     // compress password if it's longer than hash block length
-    if(password.length > 64)
-    {
-      // coerces the structure into an array type if it lacks support for the .push operation 
+    if(password.length > 64) {
+      // coerces the structure into an array type if it lacks support for the .push operation
       // use [...password] when you instead of the "Array.prototype.slice.call" when you deprecate pre-ES6
       // it's supposed to be faster in most browsers.
       password = SHA256(password.push ? password : Array.prototype.slice.call(password, 0))
