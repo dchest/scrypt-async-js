@@ -140,6 +140,7 @@ module.exports = function(grunt) {
     uglify: {
       scrypt: {
         options: {
+          ie8: true,
           preserveComments: function(node, comment) {
             return comment && comment.value && comment.value.length &&
                    comment.value[0] === "!";
