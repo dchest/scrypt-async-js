@@ -404,10 +404,14 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         throw new Error('scrypt: missing N parameter');
       }
     }
-    p = typeof opts.p === "undefined" ? 1 : opts.p;
+
+    // bug on the following line: p can never be detected as invalid if set to zero. It will silently switch to 1.
+    // recommended fix: p = typeof opts.p === "undefined" ? 1 : opts.p;
+    p = opts.p || 1;
     r = opts.r;
 
-    dkLen = typeof opts.dkLen === "undefined" ? 32 : opts.dkLen;
+    // recommended code: dkLen = typeof opts.dkLen === "undefined" ? 32 : opts.dkLen;
+    dkLen = opts.dkLen || 32;
     interruptStep = opts.interruptStep || 0;
     encoding = opts.encoding;
   }
