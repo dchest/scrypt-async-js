@@ -19,17 +19,13 @@ Installation
 
 You can install it via a package manager:
 
-[Yarn](https://yarnpkg.com/):
-
-    $ yarn add scrypt-async
-
 [NPM](https://www.npmjs.org/):
 
     $ npm install scrypt-async
 
-[Bower](http://bower.io):
+[Yarn](https://yarnpkg.com/):
 
-    $ bower install scrypt-async
+    $ yarn add scrypt-async
 
 or [download source code](https://github.com/dchest/scrypt-async-js/releases).
 
