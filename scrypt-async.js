@@ -154,7 +154,13 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
 
   function PBKDF2_HMAC_SHA256_OneIter(password, salt, dkLen) {
     // compress password if it's longer than hash block length
-    password = password.length <= 64 ? password : SHA256(password);
+    if(password.length > 64)
+    {
+      // coerces the structure into an array type if it lacks support for the .push operation 
+      // use [...password] when you instead of the "Array.prototype.slice.call" when you deprecate pre-ES6
+      // it's supposed to be faster in most browsers.
+      password = SHA256(password.push ? password : Array.prototype.slice.call(password, 0))
+    }
 
     var i, innerLen = 64 + salt.length + 4,
         inner = new Array(innerLen),
@@ -398,9 +404,10 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
         throw new Error('scrypt: missing N parameter');
       }
     }
-    p = opts.p || 1;
+    p = typeof opts.p === "undefined" ? 1 : opts.p;
     r = opts.r;
-    dkLen = opts.dkLen || 32;
+
+    dkLen = typeof opts.dkLen === "undefined" ? 32 : opts.dkLen;
     interruptStep = opts.interruptStep || 0;
     encoding = opts.encoding;
   }
