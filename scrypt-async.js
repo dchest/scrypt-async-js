@@ -155,10 +155,9 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
   function PBKDF2_HMAC_SHA256_OneIter(password, salt, dkLen) {
     // compress password if it's longer than hash block length
     if(password.length > 64) {
-      // coerces the structure into an array type if it lacks support for the .push operation
-      // use [...password] when you instead of the "Array.prototype.slice.call" when you deprecate pre-ES6
-      // it's supposed to be faster in most browsers.
-      password = SHA256(password.push ? password : Array.prototype.slice.call(password, 0))
+      // SHA256 expects password to be an Array. If it's not
+      // (i.e. it doesn't have .push method), convert it to one.
+      password = SHA256(password.push ? password : Array.prototype.slice.call(password, 0));
     }
 
     var i, innerLen = 64 + salt.length + 4,
@@ -404,12 +403,11 @@ function scrypt(password, salt, logN, r, dkLen, interruptStep, callback, encodin
       }
     }
 
-    // bug on the following line: p can never be detected as invalid if set to zero. It will silently switch to 1.
-    // recommended fix: p = typeof opts.p === "undefined" ? 1 : opts.p;
+    // XXX: If opts.p or opts.dkLen is 0, it will be set to the default value
+    // instead of throwing due to incorrect value. To avoid breaking
+    // compatibility, this will only be changed in the next major version.
     p = opts.p || 1;
     r = opts.r;
-
-    // recommended code: dkLen = typeof opts.dkLen === "undefined" ? 32 : opts.dkLen;
     dkLen = opts.dkLen || 32;
     interruptStep = opts.interruptStep || 0;
     encoding = opts.encoding;
