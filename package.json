@@ -1,6 +1,6 @@
 {
   "name": "scrypt-async",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Fast \"async\" scrypt implementation in JavaScript.",
   "main": "scrypt-async.js",
   "scripts": {
