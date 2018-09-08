@@ -316,19 +316,19 @@ describe('limits test', function() {
 
   it('should throw with too big N', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: ((-1)>>>0) + 1, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: ((-1)>>>0) + 1, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
   it('should throw with too small N', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: 1, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: 1, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
   it('should throw when N is not power of two', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: 123, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: 123, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
