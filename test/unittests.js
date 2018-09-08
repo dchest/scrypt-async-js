@@ -248,6 +248,15 @@ var inputs = [
     dkLen: 256,
     encoding: 'hex',
     result: 'c3f182ee2dec846e70a6942fb529985a3a09765ef04c612923b17f18555a37076deb2b9830d69de5492651e4506ae5776d96d40f67aaee37e1777b8ad5c3111432bb3b6f7e1264401879e641aea2bd0a21a124fd5c1ece0891338d2c44ba312e497bd93660fc053a5df35ade0ca48fd0f3c6c0f6143bb3548420a7cbf6ce7c82bc6b56c8e33adbf6fbac9e0ffc4aa9fb9fcd97fd393700b7d8eac55d45d4651bdb1a270c35c8d40a22e1b2429d6521c4c673e4ba7e7f4a9638ec3b1adbc6dcab64e211b5a26df8f274511be41228cd9a4fae3ada5236ebf39dfc6cd1864652a16516fb622502205d9fdbf09dc6fa964b57cc468ee8d98e4a00bf064222dafec8'
+  },
+  {
+    password: new Uint8Array(65),
+    salt: 'salt',
+    logN: 1,
+    r: 1,
+    dkLen: 32,
+    encoding: 'binary',
+    result: [236, 122, 177, 168, 83, 62, 253, 45, 27, 145, 154, 151, 66, 174, 56, 101, 91, 130, 207, 52, 20, 52, 161, 66, 241, 202, 39, 120, 158, 73, 124, 69]
   }
 ];
 
@@ -260,6 +269,7 @@ var shortInput = {
   hexResult: '6d1bb878eee9ce4a7b77d7a44103574d',
   result: [109, 27, 184, 120, 238, 233, 206, 74, 123, 119, 215, 164, 65, 3, 87, 77]
 };
+
 
 var inputsWithP = [
   {
@@ -290,7 +300,8 @@ var inputsWithP = [
 
 describe('limits test', function() {
   var v = shortInput;
-
+  var v2 = inputs[12];
+  
   it('should throw with too small logN', function() {
     assert.throws(function() {
       scrypt(v.password, v.salt, 0, v.r, v.dkLen);
@@ -305,19 +316,19 @@ describe('limits test', function() {
 
   it('should throw with too big N', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: ((-1)>>>0) + 1, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: ((-1)>>>0) + 1, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
   it('should throw with too small N', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: 1, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: 1, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
   it('should throw when N is not power of two', function() {
     assert.throws(function() {
-      scrypt(v.password, v.salt, { N: 123, r: v.r, dkLen: v.dkLen });
+      scrypt(v.password, v.salt, { N: 123, r: v.r, dkLen: v.dkLen }, function() {});
     }, Error);
   });
 
@@ -339,6 +350,11 @@ describe('limits test', function() {
     }, Error);
   });
 
+  it('should not throw when password > 64', function() {
+    assert.doesNotThrow(function() {
+      scrypt(v2.password, v2.salt, { logN: v2.logN, r: v2.r, dkLen: v2.dkLen }, function() {});
+    }, Error);
+  });
 });
 
 describe('argument order test', function() {
@@ -473,11 +489,18 @@ describe('async input/output test', function() {
   });
   it('input 9', function(done) {
     async_test(9, step, done);
-  });
+  });  
+  // the following two tests take a bit of time (~2.8s each),
   it('input 10', function(done) {
     async_test(10, step, done);
   });
-
+  it('input 11', function(done) {
+    async_test(11, step, done);
+  }); 
+  // the following test tests long input
+  it('input 12', function(done) {
+    async_test(12, step, done);
+  });
 });
 
 describe('async input/output test with zero interruptStep', function() {
